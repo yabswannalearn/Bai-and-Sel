@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios"
 
 export default function AddItemPage() {
   const [name, setName] = useState("");
@@ -9,18 +10,19 @@ export default function AddItemPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/items`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, description }),
-    });
-
-    const data = await res.json();
-    console.log(data);
+    try {
+      const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/items`,
+      { name, description }
+    );
+    console.log(res.data)
 
     // reset form
     setName("");
     setDescription("");
+    } catch (err: any) {
+      console.error("Error adding item: ", err);
+    }
   };
 
   return (
