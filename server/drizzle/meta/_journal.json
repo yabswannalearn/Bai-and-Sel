@@ -29,6 +29,13 @@
       "when": 1758283203055,
       "tag": "0003_silly_ricochet",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1758357836545,
+      "tag": "0004_lush_daredevil",
+      "breakpoints": true
     }
   ]
 }
