@@ -2,15 +2,19 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import itemRoutes from "./routes/itemRoute"
+import cookieParser from "cookie-parser";
+import authRoute from "./routes/authRoute"
 
 const app = express();
 const PORT = 3001;
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000", credentials: true}));
 app.use(express.json());
+app.use(cookieParser())
 
 app.use("/api", itemRoutes);
+app.use("/auth", authRoute)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend running 🚀");
