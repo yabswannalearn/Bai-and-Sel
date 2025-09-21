@@ -43,6 +43,13 @@
       "when": 1758415223355,
       "tag": "0005_sparkling_talisman",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1758416012910,
+      "tag": "0006_fuzzy_ender_wiggin",
+      "breakpoints": true
     }
   ]
 }

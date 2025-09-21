@@ -11,7 +11,7 @@ export const users = pgTable("users", {
 
 export const items = pgTable("items", {
     id: serial("id").primaryKey(),
-    // userId: integer("user_id").notNull().reference() => users,
+    userId: integer("user_id").notNull().references(() => users.id, {onDelete: "cascade"}),
     name: varchar("name", {length: 256}).notNull(),
     description: text("description").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull()
