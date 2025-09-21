@@ -2,7 +2,7 @@
 import express, { Request, Response } from "express";
 import { db } from "../db"
 import { items } from "../db/schema"
-import { eq } from "drizzle-orm"
+import { eq, and } from "drizzle-orm"
 import { AuthRequest } from "../middleware/auth";
 
 const router = express.Router()
@@ -33,6 +33,66 @@ export const postItems = async (req: AuthRequest, res: Response) => {
 
   } catch (err: any) {
     console.error("❌ Post item error:", err);
+    res.status(500).json({ error: err.message })
+  }
+}
+
+export const deleteItems = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized"})
+    }
+
+    const deleted = await db
+      .delete(items)
+      .where(
+        and(
+          eq(items.id, Number(id)),
+          eq(items.userId, Number(req.user.id))
+        )
+      )
+      .returning();
+    if (deleted.length === 0) {
+      return res.status(404).json({ message: "Item not found"})
+    }
+
+    res.json({ message: "Item deleted succesfully"})
+  } catch (err: any) {
+    res.status(500).json({ error: err.message})
+  }
+}
+
+export const updateItems = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params
+    const { name, description } = req.body
+
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized "})
+    }
+
+    const updated = await db
+      .update(items)
+      .set({
+        ...(name && { name }),
+        ...(description && { description }),
+      })
+      .where(
+        and(
+          eq(items.id, Number(id)),
+          eq(items.userId, Number(req.user.id))
+        )
+      )
+      .returning()
+
+      if ( updated.length === 0) {
+        return res.status(404).json({ message: "Item not found"})
+      }
+
+      res.json({ message: "Item updated successfully", item: updated[0]})
+  } catch (err: any) {
     res.status(500).json({ error: err.message })
   }
 }
