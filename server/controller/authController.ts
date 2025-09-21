@@ -53,6 +53,10 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body
 
+    if ( !email || !password) {
+      return res.status(400).json({ error: "Please input all fields."})
+    }
+
     const [user] = await db.select().from(users).where(eq(users.email, email))
 
     if (!user) return res.status(400).json({ error: "User not found" })
