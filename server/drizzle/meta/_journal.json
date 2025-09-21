@@ -36,6 +36,13 @@
       "when": 1758357836545,
       "tag": "0004_lush_daredevil",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1758415223355,
+      "tag": "0005_sparkling_talisman",
+      "breakpoints": true
     }
   ]
 }

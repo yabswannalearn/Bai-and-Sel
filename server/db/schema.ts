@@ -5,7 +5,7 @@ import { pgTable, serial, varchar, integer, text, timestamp, foreignKey, boolean
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
-    email: varchar("email", {length: 256}).notNull(),
+    email: varchar("email", {length: 256}).notNull().unique(),
     password_hash: varchar("password_hash", {length: 256}).notNull(),
 });
 
