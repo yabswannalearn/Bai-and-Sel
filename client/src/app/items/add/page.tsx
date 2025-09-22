@@ -13,7 +13,8 @@ export default function AddItemPage() {
     try {
       const res = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/items`,
-      { name, description }
+      { name, description },
+      { withCredentials: true}
     );
     console.log(res.data)
 
