@@ -4,18 +4,31 @@ import { db } from "../db"
 import { items } from "../db/schema"
 import { eq, and } from "drizzle-orm"
 import { AuthRequest } from "../middleware/auth";
+import { users } from "../db/schema";
 
 const router = express.Router()
 
 export const getItems = async (req: Request, res: Response) => {
   try {
-    const allItems = await db.select().from(items)
-    res.json(allItems)
+    const allItems = await db
+      .select({
+        id: items.id,
+        name: items.name,
+        description: items.description,
+        userId: items.userId,
+        createdAt: items.createdAt,
+        userName: users.name, // 👈 include username
+      })
+      .from(items)
+      .leftJoin(users, eq(items.userId, users.id));
+
+    console.log("✅ Items with users:", allItems); // debug log
+    res.json(allItems);
   } catch (err: any) {
-    console.error("error", err)
-    res.status(500).json({ error: err.message })
+    console.error("error", err);
+    res.status(500).json({ error: err.message });
   }
-}
+};
 
 export const postItems = async (req: AuthRequest, res: Response) => {
   try {
