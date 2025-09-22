@@ -8,7 +8,7 @@ import axios from "axios"
 axios.defaults.withCredentials = true
 
 export default function LoginPage() {
-  const router = useRouter();
+  const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -18,34 +18,34 @@ export default function LoginPage() {
     setError("")
 
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_AUTH_API}/login`, { email, password }, { withCredentials: true })
-      router.push("/") // ✅ redirect on success
-      console.log("success teh")
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_AUTH_API}/login`,
+        { email, password },
+        { withCredentials: true }
+      )
+      router.push("/")
     } catch (err: any) {
       setError(err.response?.data?.error || "Login Failed")
     }
   }
 
   return (
-    <form onSubmit={handleLogin}>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
+    <div style={{ maxWidth: "400px", margin: "auto", padding: "2rem" }}>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <button type="submit">Login</button>
+      </form>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-
-      <button type="submit">Login</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
-    </form>
+
+      <p style={{ marginTop: "1rem" }}>
+        No account yet?{" "}
+        <Link href="/register" style={{ color: "blue", textDecoration: "underline" }}>
+          Register
+        </Link>
+      </p>
+    </div>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import axios from "axios"
 
 axios.defaults.withCredentials = true
@@ -25,45 +26,33 @@ export default function RegisterPage() {
         email,
         password,
       })
-
       setSuccess("✅ Registered successfully! Redirecting...")
-      setTimeout(() => router.push("/login"), 1500) // redirect after short delay
-      console.log("success teh")
+      setTimeout(() => router.push("/login"), 1500)
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration Failed")
     }
   }
 
   return (
-    <form onSubmit={handleRegister}>
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
+    <div style={{ maxWidth: "400px", margin: "auto", padding: "2rem" }}>
+      <h2>Register</h2>
+      <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-
-      <button type="submit">Register</button>
+        <button type="submit">Register</button>
+      </form>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
-    </form>
+
+      <p style={{ marginTop: "1rem" }}>
+        Already have an account?{" "}
+        <Link href="/login" style={{ color: "blue", textDecoration: "underline" }}>
+          Login
+        </Link>
+      </p>
+    </div>
   )
 }

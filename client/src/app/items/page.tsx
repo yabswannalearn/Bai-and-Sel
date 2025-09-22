@@ -1,22 +1,25 @@
 "use client";
 
 import axios from "axios";
-import { error } from "console";
 import { useEffect, useState } from "react";
 
 export default function ItemsPage() {
   const [items, setItems] = useState<any[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null);
 
   const fetchItems = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/items`,
-        { withCredentials: true } // ✅ ensures cookies (JWT) are sent
-      );
-      setItems(res.data);
+
+      const [itemsRes, userRes] = await Promise.all([
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items`, { withCredentials: true }),
+        axios.get(`${process.env.NEXT_PUBLIC_AUTH_API}/me`, { withCredentials: true }),
+      ]);
+
+      setItems(itemsRes.data);
+      setCurrentUserId(userRes.data?.id || null);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -24,7 +27,7 @@ export default function ItemsPage() {
     }
   };
 
-    const handleDelete = async (id: number) => {
+  const handleDelete = async (id: number) => {
     try {
       await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/items/${id}`, {
         withCredentials: true,
@@ -39,7 +42,6 @@ export default function ItemsPage() {
     fetchItems();
   }, []);
 
-
   if (loading) return <p>Loading items...</p>;
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
 
@@ -51,12 +53,14 @@ export default function ItemsPage() {
         {items.map((item) => (
           <li key={item.id}>
             <strong>{item.name}</strong>: {item.description}
-            <button
-              onClick={() => handleDelete(item.id)}
-              style={{ marginLeft: "10px", color: "red" }}
-            >
-              Delete
-            </button>
+            {item.userId === currentUserId && (
+              <button
+                onClick={() => handleDelete(item.id)}
+                style={{ marginLeft: "10px", color: "red" }}
+              >
+                Delete
+              </button>
+            )}
           </li>
         ))}
       </ul>
