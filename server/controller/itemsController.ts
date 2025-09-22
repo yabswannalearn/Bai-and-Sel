@@ -1,12 +1,16 @@
 // routes/items.ts (Express example)
-import express, { Request, Response } from "express";
+import express, { Request, Response } from "express"
 import { db } from "../db"
 import { items } from "../db/schema"
 import { eq, and } from "drizzle-orm"
-import { AuthRequest } from "../middleware/auth";
-import { users } from "../db/schema";
+import { AuthRequest } from "../middleware/auth"
+import { users } from "../db/schema"
 
 const router = express.Router()
+
+interface MulterRequest extends Request {
+  file?: Express.Multer.File
+}
 
 export const getItems = async (req: Request, res: Response) => {
   try {
@@ -15,66 +19,81 @@ export const getItems = async (req: Request, res: Response) => {
         id: items.id,
         name: items.name,
         description: items.description,
+        image: items.image, // 👈 add this
         userId: items.userId,
         createdAt: items.createdAt,
         userName: users.name,
         userEmail: users.email,
       })
       .from(items)
-      .leftJoin(users, eq(items.userId, users.id));
+      .leftJoin(users, eq(items.userId, users.id))
 
-    console.log("✅ Items with users:", allItems); // debug log
-    res.json(allItems);
+    console.log("✅ Items with users:", allItems)
+    res.json(allItems)
   } catch (err: any) {
-    console.error("error", err);
-    res.status(500).json({ error: err.message });
+    console.error("❌ Get items error:", err)
+    res.status(500).json({ error: err.message })
   }
-};
+}
 
 export const postItems = async (req: AuthRequest, res: Response) => {
   try {
-    const { name, description} = req.body
-    
+    const { name, description } = req.body;
+
     if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized "})
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
-    console.log("req.user in postItems:", req.user); 
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
-    await db.insert(items).values({ name, description, userId: Number(req.user.id)});
+    const [newItem] = await db
+      .insert(items)
+      .values({
+        name,
+        description,
+        userId: Number(req.user.id),
+        image: imagePath,
+      })
+      .returning({
+        id: items.id,
+        name: items.name,
+        description: items.description,
+        image: items.image,
+        userId: items.userId,
+        createdAt: items.createdAt,
+      })
 
-    res.status(201).json({ message: "Item created successfully"})
-
+    return res.status(201).json({
+      message: "Item created successfully",
+      item: newItem,
+    })
   } catch (err: any) {
-    console.error("❌ Post item error:", err);
+    console.error("❌ Post item error:", err)
     res.status(500).json({ error: err.message })
   }
 }
 
 export const deleteItems = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
     if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized"})
+      return res.status(401).json({ message: "Unauthorized" })
     }
 
     const deleted = await db
       .delete(items)
       .where(
-        and(
-          eq(items.id, Number(id)),
-          eq(items.userId, Number(req.user.id))
-        )
+        and(eq(items.id, Number(id)), eq(items.userId, Number(req.user.id)))
       )
-      .returning();
+      .returning()
     if (deleted.length === 0) {
-      return res.status(404).json({ message: "Item not found"})
+      return res.status(404).json({ message: "Item not found" })
     }
 
-    res.json({ message: "Item deleted succesfully"})
+    res.json({ message: "Item deleted succesfully" })
   } catch (err: any) {
-    res.status(500).json({ error: err.message})
+    res.status(500).json({ error: err.message })
   }
 }
 
@@ -84,7 +103,7 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
     const { name, description } = req.body
 
     if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized "})
+      return res.status(401).json({ message: "Unauthorized " })
     }
 
     const updated = await db
@@ -94,18 +113,15 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
         ...(description && { description }),
       })
       .where(
-        and(
-          eq(items.id, Number(id)),
-          eq(items.userId, Number(req.user.id))
-        )
+        and(eq(items.id, Number(id)), eq(items.userId, Number(req.user.id)))
       )
       .returning()
 
-      if ( updated.length === 0) {
-        return res.status(404).json({ message: "Item not found"})
-      }
+    if (updated.length === 0) {
+      return res.status(404).json({ message: "Item not found" })
+    }
 
-      res.json({ message: "Item updated successfully", item: updated[0]})
+    res.json({ message: "Item updated successfully", item: updated[0] })
   } catch (err: any) {
     res.status(500).json({ error: err.message })
   }

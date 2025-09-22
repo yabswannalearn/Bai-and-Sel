@@ -4,6 +4,7 @@ import cors from "cors";
 import itemRoutes from "./routes/itemRoute"
 import cookieParser from "cookie-parser";
 import authRoute from "./routes/authRoute"
+import path from "path";
 
 const app = express();
 const PORT = 3001;
@@ -15,6 +16,7 @@ app.use(cookieParser())
 
 app.use("/api", itemRoutes);
 app.use("/auth", authRoute)
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend running 🚀");

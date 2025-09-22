@@ -10,9 +10,12 @@ export const users = pgTable("users", {
 });
 
 export const items = pgTable("items", {
-    id: serial("id").primaryKey(),
-    userId: integer("user_id").notNull().references(() => users.id, {onDelete: "cascade"}),
-    name: varchar("name", {length: 256}).notNull(),
-    description: text("description").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull()
-})
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name", { length: 256 }).notNull(),
+  description: text("description").notNull(),
+  image: varchar("image", { length: 512 }), // stores file path/URL
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});

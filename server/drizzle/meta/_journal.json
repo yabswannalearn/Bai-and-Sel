@@ -50,6 +50,13 @@
       "when": 1758416012910,
       "tag": "0006_fuzzy_ender_wiggin",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1758505862322,
+      "tag": "0007_milky_namora",
+      "breakpoints": true
     }
   ]
 }

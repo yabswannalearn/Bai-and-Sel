@@ -1,11 +1,12 @@
 import { Router } from "express"
 import { getItems, postItems, deleteItems, updateItems} from "../controller/itemsController"
 import { authMiddleware } from "../middleware/auth";
+import { upload } from "../middleware/upload";
 
 const router = Router();
 
 router.get("/items", getItems)
-router.post("/items", authMiddleware, postItems)
+router.post("/items", authMiddleware, upload.single("image"), postItems);
 router.delete("/items/:id", authMiddleware, deleteItems)
 router.patch("/items/:id", authMiddleware, updateItems)
 
