@@ -17,7 +17,8 @@ export const getItems = async (req: Request, res: Response) => {
         description: items.description,
         userId: items.userId,
         createdAt: items.createdAt,
-        userName: users.name, // 👈 include username
+        userName: users.name,
+        userEmail: users.email,
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id));
