@@ -4,6 +4,11 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import axios from "axios"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { motion } from "framer-motion"
+import { LandingNavBar } from "@/components/layout/LandingNavBar"
 
 axios.defaults.withCredentials = true
 
@@ -34,25 +39,39 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={{ maxWidth: "400px", margin: "auto", padding: "2rem" }}>
-      <h2>Register</h2>
-      <form onSubmit={handleRegister} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+    <div>
+      <LandingNavBar/>
+      <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}>
+      <div className="flex justify-center items-center w-full min-h-screen">
+        <Card className="w-[90%] md:w-1/2 lg:w-1/4 p-4 flex justify-center items-center">
+          <h2>Register</h2>
+          <form onSubmit={handleRegister} className="flex flex-col gap-y-4 w-full">
 
-        <button type="submit">Register</button>
-      </form>
+            <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+            <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
+            <Button type="submit">Register</Button>
+          </form>
 
-      <p style={{ marginTop: "1rem" }}>
-        Already have an account?{" "}
-        <Link href="/login" style={{ color: "blue", textDecoration: "underline" }}>
-          Login
-        </Link>
-      </p>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {success && <p style={{ color: "green" }}>{success}</p>}
+
+
+          <div className="flex items-center justify-center">
+            <p>
+              Already have an account?{" "}
+              <Link href="/login" className="underline text-blue-400">
+                Login
+              </Link>
+            </p>
+          </div>
+        </Card>
+      </div>
+    </motion.div>
     </div>
   )
 }
