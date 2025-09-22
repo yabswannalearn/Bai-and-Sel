@@ -1,33 +1,36 @@
 "use client"
 
-import React, { useEffect, useState} from 'react'
+import React, { useEffect, useState } from "react"
+import axios from "axios"
+import Navbar from "@/components/layout/Navbar" // adjust the path
 
-export default function page() {
+axios.defaults.withCredentials = true // ✅ include cookies automatically
 
-  const[message, setMessage] = useState("Loading");
-  const[items, setItems] = useState([]);
+export default function Page() {
+  const [message, setMessage] = useState("Loading")
+  const [items, setItems] = useState<string[]>([])
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/home").then(
-    response => response.json()
-  ).then(
-    data => {
-      console.log(data)
-      setMessage(data.message)
-      setItems(data.items)
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:3001")
+        console.log(res.data)
+        setMessage(res.data.message)
+        setItems(res.data.items)
+      } catch (err) {
+        console.error("Error fetching data:", err)
+      }
     }
-  )
+
+    fetchData()
   }, [])
 
   return (
     <div>
-      <div>{message}</div>
+      {/* ✅ Navbar at the top */}
+      <Navbar />
 
-    {items.map((items, index) => (
-        <div key={index}>{items}</div>
-      ))}
-
+      <h2>{message}</h2>
     </div>
-
   )
 }
