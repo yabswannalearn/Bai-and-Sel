@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import { Sun, Moon, ChevronDown } from "lucide-react"
+import Link from "next/link"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -33,14 +34,13 @@ export const LandingNavBar = () => {
 
 
     return (
-        <nav className="w-full flex fixed top-0 p-4 border-2">
+        <nav className="w-full flex fixed top-0 p-4 border-1">
             <div className="flex justify-between w-full">
-                <h1 className="font-bold text-xl">Logo.</h1>
+                <Link href="/login">  <h1 className="font-bold text-xl">Logo.</h1></Link>
 
                 <div className="flex gap-x-4 hidden md:flex items-center">
-                    <Button variant="ghost">Home</Button>
-                    <Button variant="ghost">About Us</Button>
-                    <Button variant="ghost">Contact</Button>
+                    <Link href="/about"><Button variant="ghost">About Us</Button></Link>
+                    <Link href="/contact"><Button variant="ghost">Contact</Button></Link>
                     <Button
                         variant="ghost"
                         className="flex items-center justify-center"
@@ -50,16 +50,17 @@ export const LandingNavBar = () => {
                     </Button>
                 </div>
 
-       
+
                 <div className="md:hidden">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost"><ChevronDown /></Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-40">
-                            <DropdownMenuItem>Home</DropdownMenuItem>
-                            <DropdownMenuItem>About Us</DropdownMenuItem>
-                            <DropdownMenuItem>Contact</DropdownMenuItem>
+
+                            <DropdownMenuItem>  <Link href="/about">About us</Link> </DropdownMenuItem>
+                            <DropdownMenuItem>  <Link href="/contact">Contact</Link></DropdownMenuItem>
+
                             <Button variant="ghost" onClick={() => setDarkMode(darkMode ? false : true)}> {darkMode ? <Sun /> : <Moon />}</Button>
                         </DropdownMenuContent>
                     </DropdownMenu>
