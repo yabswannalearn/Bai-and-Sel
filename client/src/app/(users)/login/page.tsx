@@ -76,7 +76,7 @@ export default function LoginPage() {
                   required
                 />
               ))}
-              <Button type="submit" className="w-full">Login</Button>
+              <Button type="submit" className="w-full cursor-pointer">Login</Button>
             </form>
             {error && <p className="text-red-500 text-center">{error}</p>}
             <p className="text-center text-sm">
