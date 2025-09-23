@@ -44,7 +44,7 @@ export default function ContactUs() {
   }
 
   return (
-    <div>
+    <div className="transition-all duration-700">
       <LandingNavBar />
       <motion.div
         initial={{ opacity: 0 }}
