@@ -1,12 +1,13 @@
 import { Router } from "express"
 import { authMiddleware } from "../middleware/auth";
-import { register, login, logout } from "../controller/authController"
+import { register, login, logout, contactUs } from "../controller/authController"
 
 const router = Router();
 
 router.post("/register", register)
 router.post("/login", login)
 router.post("/logout", logout)
+router.post("/contact", contactUs)
 
 router.get("/me", authMiddleware, (req: any, res) => {
   if (!req.user) {

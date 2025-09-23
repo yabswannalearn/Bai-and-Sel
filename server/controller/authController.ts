@@ -7,6 +7,8 @@ import { eq } from "drizzle-orm"
 import { hash } from "crypto"
 import { error } from "console"
 import { json } from "stream/consumers"
+import { sendEmail } from "../middleware/mailer"
+// import 
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret"
 
@@ -85,3 +87,33 @@ export const logout = async (req: Request, res: Response) => {
   res.clearCookie("token")
   res.json({ message: "Logged Out" })
 }
+
+
+export const contactUs = async (req: Request, res: Response) => {
+  try {
+    const { email, subject, text } = req.body;
+
+    if (!email || !subject || !text) {
+      return res.status(400).json({ error: "Input all fields" });
+    }
+
+    await sendEmail(
+      process.env.EMAIL!,
+      process.env.EMAIL!,
+      `Email from ${email}: ${subject}`,
+      text
+    );
+
+    await sendEmail(
+      process.env.EMAIL!,
+      email,
+      "Thank you for contacting Bai & Sel",
+      `We received your message:\n\nSubject: ${subject}\n\n${text}`
+    );
+
+    return res.status(200).json({ success: true, message: "Email sent!" });
+  } catch (err) {
+    console.error((err as Error).message);
+    return res.status(500).json({ error: "Something went wrong." });
+  }
+};
