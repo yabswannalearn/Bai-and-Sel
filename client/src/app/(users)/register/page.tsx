@@ -54,7 +54,7 @@ export default function RegisterPage() {
             <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
-            <Button type="submit">Register</Button>
+            <Button type="submit" className="cursor-pointer">Register</Button>
           </form>
 
           {error && <p style={{ color: "red" }}>{error}</p>}
