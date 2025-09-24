@@ -2,7 +2,7 @@
 import express, { Request, Response } from "express"
 import { db } from "../db"
 import { items } from "../db/schema"
-import { eq, and } from "drizzle-orm"
+import { eq, and, or, ilike} from "drizzle-orm"
 import { AuthRequest } from "../middleware/auth"
 import { users } from "../db/schema"
 
@@ -12,14 +12,17 @@ interface MulterRequest extends Request {
   file?: Express.Multer.File
 }
 
+
 export const getItems = async (req: Request, res: Response) => {
   try {
-    const allItems = await db
+    const search = req.query.search as string | undefined;
+
+    const query = db
       .select({
         id: items.id,
         name: items.name,
         description: items.description,
-        image: items.image, // 👈 add this
+        image: items.image,
         userId: items.userId,
         createdAt: items.createdAt,
         userName: users.name,
@@ -27,14 +30,22 @@ export const getItems = async (req: Request, res: Response) => {
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))
+      .where(
+        search
+          ? or(
+              ilike(items.name, `%${search}%`),
+              ilike(items.description, `%${search}%`)
+            )
+          : undefined // 👈 if no search, return all
+      );
 
-    console.log("✅ Items with users:", allItems)
-    res.json(allItems)
+    const results = await query;
+    res.json(results);
   } catch (err: any) {
-    console.error("❌ Get items error:", err)
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err.message });
   }
-}
+};
+
 
 export const postItems = async (req: AuthRequest, res: Response) => {
   try {
