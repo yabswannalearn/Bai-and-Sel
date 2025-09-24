@@ -39,7 +39,7 @@ export default function LoginPage() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col transition-all duration-700">
       <LandingNavBar />
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="flex-1 flex flex-col md:flex-row justify-center items-center gap-6 px-4 md:px-12 py-12">
         <div className="md:w-1/2 flex flex-col gap-4 justify-center text-center md:text-left">
