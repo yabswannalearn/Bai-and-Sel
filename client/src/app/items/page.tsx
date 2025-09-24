@@ -8,14 +8,16 @@ export default function ItemsPage() {
   const [currentUserId, setCurrentUserId] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [search, setSearch] = useState("")
 
-  const fetchItems = async () => {
+  const fetchItems = async (searchTerm = "") => {
     try {
       setLoading(true)
 
       const [itemsRes, userRes] = await Promise.all([
         axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items`, {
           withCredentials: true,
+          params: searchTerm ? { search: searchTerm } : {}, // 👈 only send if not empty
         }),
         axios.get(`${process.env.NEXT_PUBLIC_AUTH_API}/me`, {
           withCredentials: true,
@@ -42,8 +44,13 @@ export default function ItemsPage() {
     }
   }
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    fetchItems(search) // 👈 only fetch with keyword
+  }
+
   useEffect(() => {
-    fetchItems()
+    fetchItems() // load all items at first
   }, [])
 
   if (loading) return <p>Loading items...</p>
@@ -52,6 +59,18 @@ export default function ItemsPage() {
   return (
     <div style={{ padding: "20px" }}>
       <h1>📦 Items List</h1>
+
+      {/* 🔍 Simple search input */}
+      <form onSubmit={handleSearch} style={{ marginBottom: "20px" }}>
+        <input
+          type="text"
+          placeholder="Search items..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
+
       <ul>
         {items.length === 0 && <p>No items found.</p>}
         {items.map((item) => (
