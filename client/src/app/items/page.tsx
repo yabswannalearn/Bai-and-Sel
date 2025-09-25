@@ -17,7 +17,7 @@ export default function ItemsPage() {
       const [itemsRes, userRes] = await Promise.all([
         axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items`, {
           withCredentials: true,
-          params: searchTerm ? { search: searchTerm } : {}, // 👈 only send if not empty
+          params: searchTerm ? { search: searchTerm } : {}, // 👈 attach search if not empty
         }),
         axios.get(`${process.env.NEXT_PUBLIC_AUTH_API}/me`, {
           withCredentials: true,
@@ -44,13 +44,17 @@ export default function ItemsPage() {
     }
   }
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    fetchItems(search) // 👈 only fetch with keyword
-  }
-
+  // ⏳ re-fetch whenever search changes
   useEffect(() => {
-    fetchItems() // load all items at first
+    const delayDebounce = setTimeout(() => {
+      fetchItems(search)
+    }, 400) // debounce: wait 400ms after typing stops
+    return () => clearTimeout(delayDebounce)
+  }, [search])
+
+  // load all on first render
+  useEffect(() => {
+    fetchItems()
   }, [])
 
   if (loading) return <p>Loading items...</p>
@@ -60,16 +64,14 @@ export default function ItemsPage() {
     <div style={{ padding: "20px" }}>
       <h1>📦 Items List</h1>
 
-      {/* 🔍 Simple search input */}
-      <form onSubmit={handleSearch} style={{ marginBottom: "20px" }}>
-        <input
-          type="text"
-          placeholder="Search items..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
+      {/* 🔍 Search input (auto fetch on change) */}
+      <input
+        type="text"
+        placeholder="Search items..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{ marginBottom: "20px" }}
+      />
 
       <ul>
         {items.length === 0 && <p>No items found.</p>}
