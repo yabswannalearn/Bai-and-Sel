@@ -41,7 +41,6 @@ export default function ItemDetail() {
   const [error, setError] = useState<string | null>(null)
   const [isFavorited, setIsFavorited] = useState(false)
 
-  // fetch item + favorite status
   useEffect(() => {
     if (!id) return
     const fetchData = async () => {
@@ -71,7 +70,6 @@ export default function ItemDetail() {
     fetchData()
   }, [id])
 
-  // fetch current user
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -117,7 +115,6 @@ export default function ItemDetail() {
 
       <section className="p-6 mt-20">
         <Card className="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left: Image */}
           <div className="flex justify-center items-start">
             {item.image ? (
               <img
@@ -132,13 +129,10 @@ export default function ItemDetail() {
             )}
           </div>
 
-          {/* Right: Details */}
           <div className="flex flex-col justify-between space-y-6">
             <CardHeader className="p-0 flex justify-between items-start">
               <div>
-                <CardTitle className="text-3xl font-bold">
-                  {item.name}
-                </CardTitle>
+                <CardTitle className="text-3xl font-bold">{item.name}</CardTitle>
                 <CardDescription className="text-base">
                   Posted by <b>{item.userName || "Unknown"}</b>
                 </CardDescription>
@@ -189,10 +183,11 @@ export default function ItemDetail() {
                   Contact Seller
                 </Button>
 
-                {/* ✅ Edit updates state instantly */}
                 <EditItemModal
                   item={item}
-                  onUpdated={(updated) => setItem(updated)}
+                  onUpdated={(updated) =>
+                    setItem((prev) => ({ ...(prev ?? ({} as Item)), ...updated }))
+                  }
                 />
               </div>
             </CardContent>
