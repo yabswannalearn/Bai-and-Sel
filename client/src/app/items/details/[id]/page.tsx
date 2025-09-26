@@ -99,7 +99,9 @@ export default function ItemDetail() {
           <div className="flex flex-col justify-between space-y-6">
             <CardHeader className="p-0 flex justify-between items-start">
               <div>
-                <CardTitle className="text-3xl font-bold">{item.name}</CardTitle>
+                <CardTitle className="text-3xl font-bold">
+                  {item.name}
+                </CardTitle>
                 <CardDescription className="text-base">
                   Posted by <b>{item.userName || "Unknown"}</b>
                 </CardDescription>
@@ -126,9 +128,21 @@ export default function ItemDetail() {
                 Contact: <b>{item.userEmail || "Unknown"}</b>
               </p>
               <p className="text-sm text-muted-foreground">
-                Posted at: <b>{item.createdAt || "Unknown"}</b>
+                Posted at:{" "}
+                <b>
+                  {item.createdAt
+                    ? new Date(item.createdAt).toLocaleString("en-US", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      })
+                    : "Unknown"}
+                </b>
               </p>
-
+              
               {/* Example action buttons */}
               <div className="flex gap-4 mt-6">
                 <Button size="lg" className="w-1/2">
