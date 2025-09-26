@@ -6,6 +6,7 @@ import axios from "axios"
 export default function AddItemPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("")
   const [image, setImage] = useState<File| null>(null)
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
@@ -19,6 +20,7 @@ export default function AddItemPage() {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
+      formData.append("category", category);
       if (image) {
         formData.append("image", image)
       }
@@ -37,6 +39,7 @@ export default function AddItemPage() {
       // reset form
       setName("")
       setDescription("")
+      setCategory("")
       setImage(null);
     } catch (err:any) {
       console.error("error adding items", err)
@@ -59,6 +62,13 @@ export default function AddItemPage() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
+          required
+        />
+        <input
+          type="text"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          placeholder="Category"
           required
         />
         <input

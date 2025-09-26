@@ -1,0 +1,1 @@
+ALTER TABLE "items" ADD COLUMN "category" varchar(256) NOT NULL;

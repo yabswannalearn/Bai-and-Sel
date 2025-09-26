@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 export default function AddItemModal() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("")
   const [image, setImage] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,6 +24,7 @@ export default function AddItemModal() {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
+      formData.append("category", category);
       if (image) formData.append("image", image);
 
       const res = await axios.post(
@@ -39,6 +41,7 @@ export default function AddItemModal() {
       // reset form
       setName("");
       setDescription("");
+      setCategory("");
       setImage(null);
     } catch (err: any) {
       console.error("❌ Error adding items", err);
@@ -69,6 +72,14 @@ export default function AddItemModal() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Description"
+            required
+            className="w-full border p-2 rounded"
+          />
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Category"
             required
             className="w-full border p-2 rounded"
           />

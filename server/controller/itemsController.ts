@@ -28,6 +28,7 @@ export const getItems = async (req: Request, res: Response) => {
         createdAt: items.createdAt,
         userName: users.name,
         userEmail: users.email,
+        category: items.category
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))
@@ -61,6 +62,7 @@ export const getItemById = async (req: Request, res: Response) => {
         createdAt: items.createdAt,
         userName: users.name,
         userEmail: users.email,
+        category: items.category
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))
@@ -80,7 +82,7 @@ export const getItemById = async (req: Request, res: Response) => {
 
 export const postItems = async (req: AuthRequest, res: Response) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, category } = req.body; // ✅ add category
 
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -93,6 +95,7 @@ export const postItems = async (req: AuthRequest, res: Response) => {
       .values({
         name,
         description,
+        category,
         userId: Number(req.user.id),
         image: imagePath,
       })
@@ -103,17 +106,19 @@ export const postItems = async (req: AuthRequest, res: Response) => {
         image: items.image,
         userId: items.userId,
         createdAt: items.createdAt,
-      })
+        category: items.category,
+      });
 
     return res.status(201).json({
       message: "Item created successfully",
       item: newItem,
-    })
+    });
   } catch (err: any) {
-    console.error("❌ Post item error:", err)
-    res.status(500).json({ error: err.message })
+    console.error("❌ Post item error:", err);
+    res.status(500).json({ error: err.message });
   }
-}
+};
+
 
 export const deleteItems = async (req: AuthRequest, res: Response) => {
   try {
@@ -142,7 +147,7 @@ export const deleteItems = async (req: AuthRequest, res: Response) => {
 export const updateItems = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params
-    const { name, description } = req.body
+    const { name, description, category } = req.body
 
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized " })
@@ -153,6 +158,7 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
       .set({
         ...(name && { name }),
         ...(description && { description }),
+        ...(category && {category} )
       })
       .where(
         and(eq(items.id, Number(id)), eq(items.userId, Number(req.user.id)))

@@ -18,6 +18,7 @@ export const items = pgTable("items", {
   description: text("description").notNull(),
   image: varchar("image", { length: 512 }), // stores file path/URL
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  category: varchar("category", { length: 256 }).notNull(),
 });
 
 export const favorites = pgTable("favorites", {
