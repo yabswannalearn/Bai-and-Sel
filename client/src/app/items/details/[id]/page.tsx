@@ -29,34 +29,42 @@ export default function ItemDetail() {
   const [item, setItem] = useState<Item | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isFavorited, setIsFavorited] = useState(false) // default false
+  const [isFavorited, setIsFavorited] = useState(false)
 
   useEffect(() => {
     if (!id) return
-    const fetchItem = async () => {
+    const fetchData = async () => {
       try {
+        // fetch item details
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/items/${id}`,
           { withCredentials: true }
         )
         setItem(res.data)
+
+        // fetch favorite status
+        const favRes = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/favorites/status/${id}`,
+          { withCredentials: true }
+        )
+        setIsFavorited(favRes.data.favorited) // backend returns { favorited: true/false }
       } catch (err: any) {
         setError(err.message)
       } finally {
         setLoading(false)
       }
     }
-    fetchItem()
+    fetchData()
   }, [id])
 
   const toggleFavorite = async () => {
     try {
-      await axios.post(
+      const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/favorites/toggle`,
         { itemId: id },
         { withCredentials: true }
       )
-      setIsFavorited((prev) => !prev) // just flip locally
+      setIsFavorited(res.data.favorited) // backend returns new status after toggle
     } catch (err: any) {
       console.error("Favorite toggle failed:", err.message)
     }
@@ -68,69 +76,69 @@ export default function ItemDetail() {
 
   return (
     <>
-    < Navbar />
+      <Navbar />
 
-    <section className="p-6 mt-20">
-      <Card className="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Left: Image */}
-        <div className="flex justify-center items-start">
-          {item.image ? (
-            <img
-              src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
-              alt={item.name}
-              className="w-full max-w-md object-contain rounded-md border"
-            />
-          ) : (
-            <div className="w-full max-w-md h-64 bg-gray-100 flex items-center justify-center rounded-md">
-              <span className="text-gray-500">No Image</span>
-            </div>
-          )}
-        </div>
-
-        {/* Right: Details */}
-        <div className="flex flex-col justify-between space-y-6">
-          <CardHeader className="p-0 flex justify-between items-start">
-            <div>
-              <CardTitle className="text-3xl font-bold">{item.name}</CardTitle>
-              <CardDescription className="text-base">
-                Posted by <b>{item.userName || "Unknown"}</b>
-              </CardDescription>
-            </div>
-
-            {/* Heart Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleFavorite}
-              className="ml-4"
-            >
-              <Heart
-                className={`w-6 h-6 ${
-                  isFavorited ? "fill-red-500 text-red-500" : "text-gray-500"
-                }`}
+      <section className="p-6 mt-20">
+        <Card className="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Left: Image */}
+          <div className="flex justify-center items-start">
+            {item.image ? (
+              <img
+                src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
+                alt={item.name}
+                className="w-full max-w-md object-contain rounded-md border"
               />
-            </Button>
-          </CardHeader>
+            ) : (
+              <div className="w-full max-w-md h-64 bg-gray-100 flex items-center justify-center rounded-md">
+                <span className="text-gray-500">No Image</span>
+              </div>
+            )}
+          </div>
 
-          <CardContent className="p-0 space-y-4">
-            <p className="text-lg">{item.description}</p>
-            <p>
-              Contact: <b>{item.userEmail || "Unknown"}</b>
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Posted at: <b>{item.createdAt || "Unknown"}</b>
-            </p>
+          {/* Right: Details */}
+          <div className="flex flex-col justify-between space-y-6">
+            <CardHeader className="p-0 flex justify-between items-start">
+              <div>
+                <CardTitle className="text-3xl font-bold">{item.name}</CardTitle>
+                <CardDescription className="text-base">
+                  Posted by <b>{item.userName || "Unknown"}</b>
+                </CardDescription>
+              </div>
 
-            {/* Example action buttons */}
-            <div className="flex gap-4 mt-6">
-              <Button size="lg" className="w-1/2">
-                Contact Seller
+              {/* Heart Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleFavorite}
+                className="ml-4"
+              >
+                <Heart
+                  className={`w-6 h-6 ${
+                    isFavorited ? "fill-red-500 text-red-500" : "text-gray-500"
+                  }`}
+                />
               </Button>
-            </div>
-          </CardContent>
-        </div>
-      </Card>
-    </section>
+            </CardHeader>
+
+            <CardContent className="p-0 space-y-4">
+              <p className="text-lg">{item.description}</p>
+              <p>
+                Contact: <b>{item.userEmail || "Unknown"}</b>
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Posted at: <b>{item.createdAt || "Unknown"}</b>
+              </p>
+
+              {/* Example action buttons */}
+              <div className="flex gap-4 mt-6">
+                <Button size="lg" className="w-1/2">
+                  Contact Seller
+                </Button>
+              </div>
+            </CardContent>
+          </div>
+        </Card>
+      </section>
     </>
   )
 }

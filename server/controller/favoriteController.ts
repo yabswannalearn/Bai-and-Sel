@@ -62,3 +62,23 @@ export const getFavorites = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: err.message })
   }
 }
+
+export const getFavoriteStatus = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    const itemId = Number(req.params.itemId);
+
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+    if (!itemId) return res.status(400).json({ error: "Item ID required" });
+
+    const existing = await db
+      .select()
+      .from(favorites)
+      .where(and(eq(favorites.userId, userId), eq(favorites.itemId, itemId)))
+      .limit(1);
+
+    res.json({ favorited: existing.length > 0 });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+};
