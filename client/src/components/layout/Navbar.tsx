@@ -9,7 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import LogoutModal from "../ui/LogoutModal"
+import LogoutModal from "../modal/LogoutModal"
+import AddItemModal from "../modal/AddItemModal"
 import axios from "axios"
 
 export default function Navbar() {
@@ -26,9 +27,7 @@ export default function Navbar() {
           `${process.env.NEXT_PUBLIC_AUTH_API}/me`, // your auth check endpoint
           { withCredentials: true }
         )
-        if (res.data) {
-          setIsLoggedIn(true)
-        }
+        if (res.data) setIsLoggedIn(true)
       } catch {
         setIsLoggedIn(false)
       }
@@ -62,7 +61,9 @@ export default function Navbar() {
     <nav className="w-full flex fixed top-0 p-4 border-b bg-background z-50">
       <div className="flex justify-between w-full items-center">
         <Link href="/">
-          <h1 className="font-bold text-xl cursor-pointer transition active:scale-95">My App</h1>
+          <h1 className="font-bold text-xl cursor-pointer transition active:scale-95">
+            My App
+          </h1>
         </Link>
 
         {/* Desktop Links */}
@@ -76,6 +77,9 @@ export default function Navbar() {
           <Button asChild variant="ghost" className="cursor-pointer transition active:scale-95">
             <Link href="/items/favorites">Favorites</Link>
           </Button>
+
+          <AddItemModal />
+
           <Button
             variant="ghost"
             className="flex items-center justify-center cursor-pointer transition active:scale-95"
@@ -119,6 +123,17 @@ export default function Navbar() {
                   Contact
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/items/favorites" className="cursor-pointer transition active:scale-95">
+                  Favorites
+                </Link>
+              </DropdownMenuItem>
+
+              {/* ✅ Mobile Add Item modal */}
+              <DropdownMenuItem asChild>
+                <AddItemModal />
+              </DropdownMenuItem>
+
               <DropdownMenuItem asChild>
                 <Button
                   variant="ghost"
