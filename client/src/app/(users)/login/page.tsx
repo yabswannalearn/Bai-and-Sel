@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { motion, AnimatePresence } from "framer-motion"
 import { LandingNavBar } from "@/components/layout/LandingNavBar"
+import Footer from "@/components/layout/Footer"
 
 axios.defaults.withCredentials = true
 
@@ -88,6 +89,7 @@ export default function LoginPage() {
           </Card>
         </div>
       </motion.div>
+      <Footer />
     </div>
   )
 }

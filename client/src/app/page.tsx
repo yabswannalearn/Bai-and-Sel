@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import axios from "axios"
 import Navbar from "@/components/layout/Navbar"
 import ItemList from "@/components/layout/ItemList"
+import Footer from "@/components/layout/Footer"
 
 axios.defaults.withCredentials = true
 
@@ -30,6 +31,7 @@ export default function Page() {
         <h2 className="text-2xl font-bold mb-4">{message}</h2>
         <ItemList />
       </div>
+      <Footer />
     </div>
   )
 }

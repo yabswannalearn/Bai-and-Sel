@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { motion } from "framer-motion"
 import { LandingNavBar } from "@/components/layout/LandingNavBar"
+import Footer from "@/components/layout/Footer"
 
 axios.defaults.withCredentials = true
 
@@ -72,6 +73,7 @@ export default function RegisterPage() {
         </Card>
       </div>
     </motion.div>
+    <Footer />
     </div>
   )
 }

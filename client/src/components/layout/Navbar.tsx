@@ -69,12 +69,6 @@ export default function Navbar() {
         {/* Desktop Links */}
         <div className="flex gap-x-4 hidden md:flex items-center">
           <Button asChild variant="ghost" className="cursor-pointer transition active:scale-95">
-            <Link href="/about">About Us</Link>
-          </Button>
-          <Button asChild variant="ghost" className="cursor-pointer transition active:scale-95">
-            <Link href="/contact">Contact</Link>
-          </Button>
-          <Button asChild variant="ghost" className="cursor-pointer transition active:scale-95">
             <Link href="/items/favorites">Favorites</Link>
           </Button>
 

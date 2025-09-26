@@ -10,6 +10,7 @@ import axios from "axios"
 import { toast } from "sonner"
 import { Loader } from "lucide-react"
 import Navbar from "@/components/layout/Navbar"
+import Footer from "@/components/layout/Footer"
 
 export default function ContactUs() {
   const [email, setEmail] = useState("")
@@ -88,6 +89,7 @@ export default function ContactUs() {
           </Card>
         </div>
       </motion.div>
+      <Footer />
     </div>
   )
 }
