@@ -3,6 +3,14 @@
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import axios from "axios"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 type Item = {
   id: number
@@ -11,7 +19,7 @@ type Item = {
   image?: string
   userName?: string
   userEmail?: string
-  CreatedAt?: string
+  createdAt?: string
 }
 
 export default function ItemDetail() {
@@ -43,25 +51,53 @@ export default function ItemDetail() {
   if (!item) return <p className="p-4">Item not found</p>
 
   return (
-    <section className="p-4 space-y-4">
-      {item.image && (
-        <img
-          src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
-          alt={item.name}
-          className="w-64 h-64 object-cover rounded-md border"
-        />
-      )}
-      <h1 className="text-2xl font-bold">{item.name}</h1>
-      <p>{item.description}</p>
-      <p>
-        Posted by: <b>{item.userName || "Unknown"}</b>
-      </p>
-      <p>
-        Contact: <b>{item.userEmail || "Unknown"}</b>
-      </p>
-      <p>
-        Posted at: <b>{item.CreatedAt || "Unknown"}</b>
-      </p>
+    <section className="p-6">
+      <Card className="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Left: Image */}
+        <div className="flex justify-center items-start">
+          {item.image ? (
+            <img
+              src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
+              alt={item.name}
+              className="w-full max-w-md object-contain rounded-md border"
+            />
+          ) : (
+            <div className="w-full max-w-md h-64 bg-gray-100 flex items-center justify-center rounded-md">
+              <span className="text-gray-500">No Image</span>
+            </div>
+          )}
+        </div>
+
+        {/* Right: Details */}
+        <div className="flex flex-col justify-between space-y-6">
+          <CardHeader className="p-0">
+            <CardTitle className="text-3xl font-bold">{item.name}</CardTitle>
+            <CardDescription className="text-base">
+              Posted by <b>{item.userName || "Unknown"}</b>
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="p-0 space-y-4">
+            <p className="text-lg">{item.description}</p>
+            <p>
+              Contact: <b>{item.userEmail || "Unknown"}</b>
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Posted at: <b>{item.createdAt || "Unknown"}</b>
+            </p>
+
+            {/* Example action buttons like Amazon */}
+            <div className="flex gap-4 mt-6">
+              <Button size="lg" className="w-1/2">
+                Contact Seller
+              </Button>
+              <Button size="lg" variant="outline" className="w-1/2">
+                Add to Favorites
+              </Button>
+            </div>
+          </CardContent>
+        </div>
+      </Card>
     </section>
   )
 }

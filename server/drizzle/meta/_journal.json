@@ -57,6 +57,13 @@
       "when": 1758505862322,
       "tag": "0007_milky_namora",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1758873230966,
+      "tag": "0008_last_black_tom",
+      "breakpoints": true
     }
   ]
 }

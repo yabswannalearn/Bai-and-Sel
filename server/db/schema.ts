@@ -19,3 +19,14 @@ export const items = pgTable("items", {
   image: varchar("image", { length: 512 }), // stores file path/URL
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const favorites = pgTable("favorites", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, {onDelete: "cascade"}),
+  itemId: integer("item_id")
+    .notNull()
+    .references(() => items.id, {onDelete: "cascade"}),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+})
