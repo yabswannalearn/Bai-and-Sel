@@ -3,6 +3,7 @@ import { LandingNavBar } from "@/components/layout/LandingNavBar"
 import Navbar from "@/components/layout/Navbar"
 import { motion } from "framer-motion"
 import Image from "next/image"
+import Footer from "@/components/layout/Footer"
 
 export default function AboutUs() {
     return (
@@ -52,6 +53,7 @@ export default function AboutUs() {
                     </div>
                 </div>
             </motion.div>
+            <Footer />
         </div>
     )
 }
