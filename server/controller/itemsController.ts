@@ -147,7 +147,7 @@ export const deleteItems = async (req: AuthRequest, res: Response) => {
 export const updateItems = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params
-    const { name, description, category } = req.body
+    const { name, description, category, image} = req.body
 
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized " })
@@ -158,7 +158,8 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
       .set({
         ...(name && { name }),
         ...(description && { description }),
-        ...(category && {category} )
+        ...(category && { category }),
+        ...(image && { image }),
       })
       .where(
         and(eq(items.id, Number(id)), eq(items.userId, Number(req.user.id)))
@@ -169,7 +170,27 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: "Item not found" })
     }
 
-    res.json({ message: "Item updated successfully", item: updated[0] })
+    const refreshed = await db
+      .select({
+        id: items.id,
+        name: items.name,
+        description: items.description,
+        category: items.category,
+        image: items.image,
+        userId: items.userId,
+        createdAt: items.createdAt,
+        userName: users.name,
+        userEmail: users.email,
+      })
+      .from(items)
+      .innerJoin(users, eq(users.id, items.userId))
+      .where(eq(items.id, Number(id)))
+      .limit(1)
+
+    res.json({
+      message: "Item updated successfully",
+      item: refreshed[0],
+    })
   } catch (err: any) {
     res.status(500).json({ error: err.message })
   }

@@ -13,41 +13,55 @@ import {
 import { Button } from "@/components/ui/button"
 import { Heart } from "lucide-react"
 import Navbar from "@/components/layout/Navbar"
+import EditItemModal from "@/components/modal/EditItemModal"
 
 type Item = {
   id: number
   name: string
   description: string
+  category?: string
   image?: string
+  userId: number
   userName?: string
   userEmail?: string
   createdAt?: string
 }
 
+type CurrentUser = {
+  id: number
+  email: string
+  name: string
+} | null
+
 export default function ItemDetail() {
   const { id } = useParams()
   const [item, setItem] = useState<Item | null>(null)
+  const [currentUser, setCurrentUser] = useState<CurrentUser>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isFavorited, setIsFavorited] = useState(false)
 
+  // fetch item + favorite status
   useEffect(() => {
     if (!id) return
     const fetchData = async () => {
       try {
-        // fetch item details
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/items/${id}`,
           { withCredentials: true }
         )
-        setItem(res.data)
 
-        // fetch favorite status
+        setItem({
+          ...res.data,
+          id: Number(res.data.id),
+          userId: Number(res.data.userId),
+        })
+
         const favRes = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/favorites/status/${id}`,
           { withCredentials: true }
         )
-        setIsFavorited(favRes.data.favorited) // backend returns { favorited: true/false }
+        setIsFavorited(favRes.data.favorited)
       } catch (err: any) {
         setError(err.message)
       } finally {
@@ -57,6 +71,29 @@ export default function ItemDetail() {
     fetchData()
   }, [id])
 
+  // fetch current user
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
+          withCredentials: true,
+        })
+
+        if (res.data?.id) {
+          setCurrentUser({
+            ...res.data,
+            id: Number(res.data.id),
+          })
+        } else {
+          setCurrentUser(null)
+        }
+      } catch {
+        setCurrentUser(null)
+      }
+    }
+    fetchUser()
+  }, [])
+
   const toggleFavorite = async () => {
     try {
       const res = await axios.post(
@@ -64,7 +101,7 @@ export default function ItemDetail() {
         { itemId: id },
         { withCredentials: true }
       )
-      setIsFavorited(res.data.favorited) // backend returns new status after toggle
+      setIsFavorited(res.data.favorited)
     } catch (err: any) {
       console.error("Favorite toggle failed:", err.message)
     }
@@ -107,7 +144,6 @@ export default function ItemDetail() {
                 </CardDescription>
               </div>
 
-              {/* Heart Button */}
               <Button
                 variant="ghost"
                 size="icon"
@@ -124,6 +160,11 @@ export default function ItemDetail() {
 
             <CardContent className="p-0 space-y-4">
               <p className="text-lg">{item.description}</p>
+              {item.category && (
+                <p>
+                  Category: <b>{item.category}</b>
+                </p>
+              )}
               <p>
                 Contact: <b>{item.userEmail || "Unknown"}</b>
               </p>
@@ -142,12 +183,17 @@ export default function ItemDetail() {
                     : "Unknown"}
                 </b>
               </p>
-              
-              {/* Example action buttons */}
-              <div className="flex gap-4 mt-6">
-                <Button size="lg" className="w-1/2">
+
+              <div className="flex flex-col gap-4 mt-6">
+                <Button size="lg" className="w-full">
                   Contact Seller
                 </Button>
+
+                {/* ✅ Edit updates state instantly */}
+                <EditItemModal
+                  item={item}
+                  onUpdated={(updated) => setItem(updated)}
+                />
               </div>
             </CardContent>
           </div>
