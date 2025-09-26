@@ -5,6 +5,7 @@ import { items } from "../db/schema"
 import { eq, and, or, ilike} from "drizzle-orm"
 import { AuthRequest } from "../middleware/auth"
 import { users } from "../db/schema"
+import { error } from "console"
 
 const router = express.Router()
 
@@ -46,6 +47,36 @@ export const getItems = async (req: Request, res: Response) => {
   }
 };
 
+export const getItemById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const query = db
+      .select({
+        id: items.id,
+        name: items.name,
+        description: items.description,
+        image: items.image,
+        userId: items.userId,
+        createdAt: items.createdAt,
+        userName: users.name,
+        userEmail: users.email,
+      })
+      .from(items)
+      .leftJoin(users, eq(items.userId, users.id))
+      .where(eq(items.id, Number(id)));
+
+    const result = await query;
+
+    if (result.length === 0) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    res.json(result[0]);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 export const postItems = async (req: AuthRequest, res: Response) => {
   try {
