@@ -1,12 +1,13 @@
 "use client"
 import { LandingNavBar } from "@/components/layout/LandingNavBar"
+import Navbar from "@/components/layout/Navbar"
 import { motion } from "framer-motion"
 import Image from "next/image"
 
 export default function AboutUs() {
     return (
         <div>
-            <LandingNavBar />
+            <Navbar />
 
             <motion.div
                 initial={{ opacity: 0 }}

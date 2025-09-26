@@ -1,12 +1,12 @@
 import { Router } from "express"
 import { authMiddleware } from "../middleware/auth";
-import { deleteFavorites, getFavorites, postFavorites } from "../controller/favoriteController";
+import { getFavorites, toggleFavorite } from "../controller/favoriteController";
 
 const router = Router();
 
 
 router.get("/", authMiddleware, getFavorites)
-router.post("/", authMiddleware, postFavorites)
-router.delete('/', authMiddleware, deleteFavorites)
+router.post("/toggle", authMiddleware, toggleFavorite)
+
 
 export default router;

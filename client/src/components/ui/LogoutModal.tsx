@@ -1,10 +1,18 @@
-"use client";
+"use client"
 
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 
 export default function LogoutModal({ onClose }: { onClose: () => void }) {
-  const router = useRouter();
+  const router = useRouter()
 
   const handleLogout = async () => {
     try {
@@ -12,24 +20,33 @@ export default function LogoutModal({ onClose }: { onClose: () => void }) {
         `${process.env.NEXT_PUBLIC_AUTH_API}/logout`,
         {},
         { withCredentials: true }
-      );
-      router.push("/login"); // redirect to login
+      )
+      router.push("/login") // redirect to login
     } catch (err) {
-      console.error("Logout error:", err);
+      console.error("Logout error:", err)
     }
-  };
+  }
 
   return (
-    <div style={{
-      position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
-      backgroundColor: "rgba(0,0,0,0.5)", display: "flex",
-      alignItems: "center", justifyContent: "center"
-    }}>
-      <div style={{ background: "white", padding: "2rem", borderRadius: "8px" }}>
-        <h3>Are you sure you want to logout?</h3>
-        <button onClick={handleLogout}>Yes</button>
-        <button onClick={onClose}>Cancel</button>
-      </div>
-    </div>
-  );
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Confirm Logout</DialogTitle>
+        </DialogHeader>
+
+        <p className="text-sm text-muted-foreground">
+          Are you sure you want to log out?
+        </p>
+
+        <DialogFooter className="flex justify-end gap-2">
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button variant="destructive" onClick={handleLogout}>
+            Yes, Logout
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
 }

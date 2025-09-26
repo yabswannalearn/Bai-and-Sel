@@ -52,7 +52,7 @@ export default function ItemList() {
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>
 
   return (
-    <section className="p-4 space-y-6">
+    <section className="p-4 space-y-6 mt-20">
       <div className="flex justify-between items-center flex-wrap gap-2">
         <h2 className="text-2xl font-bold">Browse Items</h2>
         <Input

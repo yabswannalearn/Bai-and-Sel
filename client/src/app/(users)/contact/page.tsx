@@ -9,6 +9,7 @@ import { useState } from "react"
 import axios from "axios"
 import { toast } from "sonner"
 import { Loader } from "lucide-react"
+import Navbar from "@/components/layout/Navbar"
 
 export default function ContactUs() {
   const [email, setEmail] = useState("")
@@ -45,7 +46,7 @@ export default function ContactUs() {
 
   return (
     <div className="transition-all duration-700">
-      <LandingNavBar />
+      < Navbar />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
