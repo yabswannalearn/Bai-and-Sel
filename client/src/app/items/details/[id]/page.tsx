@@ -118,7 +118,13 @@ export default function ItemDetail() {
           <div className="flex justify-center items-start">
             {item.image ? (
               <img
-                src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
+                src={
+                  typeof item.image === "string"
+                    ? `${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`
+                    : item.image
+                    ? URL.createObjectURL(item.image)
+                    : undefined
+                }
                 alt={item.name}
                 className="w-full max-w-md object-contain rounded-md border"
               />
@@ -132,7 +138,9 @@ export default function ItemDetail() {
           <div className="flex flex-col justify-between space-y-6">
             <CardHeader className="p-0 flex justify-between items-start">
               <div>
-                <CardTitle className="text-3xl font-bold">{item.name}</CardTitle>
+                <CardTitle className="text-3xl font-bold">
+                  {item.name}
+                </CardTitle>
                 <CardDescription className="text-base">
                   Posted by <b>{item.userName || "Unknown"}</b>
                 </CardDescription>
@@ -186,7 +194,10 @@ export default function ItemDetail() {
                 <EditItemModal
                   item={item}
                   onUpdated={(updated) =>
-                    setItem((prev) => ({ ...(prev ?? ({} as Item)), ...updated }))
+                    setItem((prev) => ({
+                      ...(prev ?? ({} as Item)),
+                      ...updated,
+                    }))
                   }
                 />
               </div>

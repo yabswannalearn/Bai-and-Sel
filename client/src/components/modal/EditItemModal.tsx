@@ -32,7 +32,7 @@ export default function EditItemModal({ item, onUpdated }: EditItemModalProps) {
   const [name, setName] = useState(item.name)
   const [description, setDescription] = useState(item.description)
   const [category, setCategory] = useState(item.category || "")
-  const [file, setFile] = useState<File | null>(null)
+  const [image, setImage] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
@@ -42,17 +42,16 @@ export default function EditItemModal({ item, onUpdated }: EditItemModalProps) {
       setLoading(true)
 
       const formData = new FormData()
-      formData.append("name", name)
-      formData.append("description", description)
-      formData.append("category", category)
-      if (file) formData.append("image", file)
+      if (name) formData.append("name", name)
+      if (description) formData.append("description", description)
+      if (category) formData.append("category", category)
+      if (image) formData.append("image", image)
 
       const res = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/items/${item.id}`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
+          withCredentials: true, // let Axios handle Content-Type automatically
         }
       )
 
@@ -61,7 +60,9 @@ export default function EditItemModal({ item, onUpdated }: EditItemModalProps) {
       }
 
       setOpen(false)
-      router.refresh() // refresh detail view immediately
+      router.refresh()
+    } catch (err: any) {
+      console.error("❌ Error updating item", err)
     } finally {
       setLoading(false)
     }
@@ -76,7 +77,20 @@ export default function EditItemModal({ item, onUpdated }: EditItemModalProps) {
         <DialogHeader>
           <DialogTitle>Edit Item</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div
+          className="space-y-4"
+          onPaste={(e: React.ClipboardEvent<HTMLDivElement>) => {
+            const items = e.clipboardData.items
+            for (let i = 0; i < items.length; i++) {
+              if (items[i].type.indexOf("image") !== -1) {
+                const file = items[i].getAsFile()
+                if (file) setImage(file)
+                e.preventDefault()
+                e.stopPropagation()
+              }
+            }
+          }}
+        >
           <div>
             <Label>Name</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
@@ -96,11 +110,25 @@ export default function EditItemModal({ item, onUpdated }: EditItemModalProps) {
             />
           </div>
           <div>
-            <Label>Image</Label>
-            <Input
-              type="file"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-            />
+            <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Upload Image
+            </Label>
+            <label className="flex items-center justify-center w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-dashed rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+              <span className="text-sm text-gray-600 dark:text-gray-300">
+                {image
+                  ? image.name
+                  : item.image
+                  ? item.image.split("/").pop()
+                  : "Choose or paste an image..."}
+              </span>
+              <input
+                type="file"
+                accept="image/*"
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => setImage(e.target.files?.[0] || null)}
+                className="hidden"
+              />
+            </label>
           </div>
           <Button onClick={handleUpdate} disabled={loading}>
             {loading ? "Updating..." : "Save Changes"}

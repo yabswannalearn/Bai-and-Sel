@@ -146,12 +146,15 @@ export const deleteItems = async (req: AuthRequest, res: Response) => {
 
 export const updateItems = async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params
-    const { name, description, category, image} = req.body
 
-    if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized " })
-    }
+    console.log("req.body:", req.body)
+    console.log("req.file:", req.file)
+
+    const { id } = req.params
+    const { name, description, category } = req.body
+    const image = req.file ? `/uploads/${req.file.filename}` : undefined
+
+    if (!req.user) return res.status(401).json({ message: "Unauthorized" })
 
     const updated = await db
       .update(items)
@@ -159,16 +162,12 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
         ...(name && { name }),
         ...(description && { description }),
         ...(category && { category }),
-        ...(image && { image }),
+        ...(image && { image }), // only update if new image uploaded
       })
-      .where(
-        and(eq(items.id, Number(id)), eq(items.userId, Number(req.user.id)))
-      )
+      .where(and(eq(items.id, Number(id)), eq(items.userId, Number(req.user.id))))
       .returning()
 
-    if (updated.length === 0) {
-      return res.status(404).json({ message: "Item not found" })
-    }
+    if (updated.length === 0) return res.status(404).json({ message: "Item not found" })
 
     const refreshed = await db
       .select({
@@ -187,10 +186,8 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
       .where(eq(items.id, Number(id)))
       .limit(1)
 
-    res.json({
-      message: "Item updated successfully",
-      item: refreshed[0],
-    })
+    res.json({ message: "Item updated successfully", item: refreshed[0] })
+    
   } catch (err: any) {
     res.status(500).json({ error: err.message })
   }
