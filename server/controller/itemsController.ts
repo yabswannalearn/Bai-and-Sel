@@ -28,7 +28,8 @@ export const getItems = async (req: Request, res: Response) => {
         createdAt: items.createdAt,
         userName: users.name,
         userEmail: users.email,
-        category: items.category
+        category: items.category,
+        price: items.price
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))
@@ -62,7 +63,8 @@ export const getItemById = async (req: Request, res: Response) => {
         createdAt: items.createdAt,
         userName: users.name,
         userEmail: users.email,
-        category: items.category
+        category: items.category,
+        price: items.price
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))
@@ -82,7 +84,7 @@ export const getItemById = async (req: Request, res: Response) => {
 
 export const postItems = async (req: AuthRequest, res: Response) => {
   try {
-    const { name, description, category } = req.body; // ✅ add category
+    const { name, description, category, price } = req.body;
 
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -98,6 +100,7 @@ export const postItems = async (req: AuthRequest, res: Response) => {
         category,
         userId: Number(req.user.id),
         image: imagePath,
+        price,
       })
       .returning({
         id: items.id,
@@ -151,7 +154,7 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
     console.log("req.file:", req.file)
 
     const { id } = req.params
-    const { name, description, category } = req.body
+    const { name, description, category, price} = req.body
     const image = req.file ? `/uploads/${req.file.filename}` : undefined
 
     if (!req.user) return res.status(401).json({ message: "Unauthorized" })
@@ -162,7 +165,8 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
         ...(name && { name }),
         ...(description && { description }),
         ...(category && { category }),
-        ...(image && { image }), // only update if new image uploaded
+        ...(image && { image }),
+        ...(price && { price }),
       })
       .where(and(eq(items.id, Number(id)), eq(items.userId, Number(req.user.id))))
       .returning()
@@ -175,6 +179,7 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
         name: items.name,
         description: items.description,
         category: items.category,
+        price: items.price,
         image: items.image,
         userId: items.userId,
         createdAt: items.createdAt,

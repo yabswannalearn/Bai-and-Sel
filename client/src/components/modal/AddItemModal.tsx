@@ -16,6 +16,7 @@ export default function AddItemModal() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("")
   const [image, setImage] = useState<File | null>(null);
+  const [price, setPrice] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +26,7 @@ export default function AddItemModal() {
       formData.append("name", name);
       formData.append("description", description);
       formData.append("category", category);
+      formData.append("price", price)
       if (image) formData.append("image", image);
 
       const res = await axios.post(
@@ -43,6 +45,7 @@ export default function AddItemModal() {
       setDescription("");
       setCategory("");
       setImage(null);
+      setPrice("")
     } catch (err: any) {
       console.error("❌ Error adding items", err);
     }
@@ -83,8 +86,15 @@ export default function AddItemModal() {
             required
             className="w-full border p-2 rounded"
           />
+          <input
+            type="text"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            placeholder="Price"
+            required
+            className="w-full border p-2 rounded"
+          />
 
-          {/* ✅ File picker + clipboard paste support */}
           <div
             className="space-y-2"
             onPaste={(e: React.ClipboardEvent<HTMLDivElement>) => {

@@ -71,6 +71,13 @@
       "when": 1758918799759,
       "tag": "0009_tan_zaladane",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1759102560721,
+      "tag": "0010_ambitious_hellcat",
+      "breakpoints": true
     }
   ]
 }

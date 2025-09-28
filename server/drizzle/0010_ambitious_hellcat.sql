@@ -1,0 +1,1 @@
+ALTER TABLE "items" ADD COLUMN "price" integer NOT NULL;
