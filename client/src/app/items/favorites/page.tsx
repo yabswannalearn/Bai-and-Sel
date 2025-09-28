@@ -3,6 +3,11 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import Cookies from "js-cookie"
+import { jwtDecode } from "jwt-decode"
+import { Loader2 } from "lucide-react"
+
 import {
   Card,
   CardContent,
@@ -11,7 +16,6 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-
 import Navbar from "@/components/layout/Navbar"
 
 type FavoriteItem = {
@@ -23,12 +27,40 @@ type FavoriteItem = {
   userName?: string
 }
 
+type TokenPayload = {
+  id: number
+  email: string
+  exp?: number
+}
+
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState<FavoriteItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isAuth, setIsAuth] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_AUTH_API}/me`,
+          { withCredentials: true }
+        )
+        if (res.data) {
+          setIsAuth(true)
+        }
+      } catch {
+        setIsAuth(false)
+        router.push("/login")
+      }
+    }
+    checkAuth()
+  }, [router])
+
+
+  useEffect(() => {
+    if (!isAuth) return
     const fetchFavorites = async () => {
       try {
         const res = await axios.get(
@@ -42,9 +74,8 @@ export default function FavoritesPage() {
         setLoading(false)
       }
     }
-
     fetchFavorites()
-  }, [])
+  }, [isAuth])
 
   const removeFavorite = async (itemId: number) => {
     try {
@@ -59,14 +90,37 @@ export default function FavoritesPage() {
     }
   }
 
-  if (loading) return <p className="p-4">Loading favorites...</p>
-  if (error) return <p className="p-4 text-red-500">Error: {error}</p>
-  if (favorites.length === 0) return <p className="p-4">No favorites yet.</p>
+  if (loading) {
+    return (
+      <>
+        <div className="flex items-center justify-center h-[80vh]">
+          <Loader2 className="w-10 h-10 animate-spin text-gray-600" />
+        </div>
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <p className="p-4 text-red-500">Error: {error}</p>
+      </>
+    )
+  }
+
+  if (favorites.length === 0) {
+    return (
+      <>
+        <Navbar />
+        <p className="p-4">No favorites yet.</p>
+      </>
+    )
+  }
 
   return (
     <>
       <Navbar />
-
       <section className="p-6 max-w-6xl mx-auto mt-20">
         <h1 className="text-3xl font-bold mb-6">My Favorites</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
