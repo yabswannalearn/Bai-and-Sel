@@ -44,6 +44,9 @@ export const LandingNavBar = () => {
 
                 <div className="flex gap-x-4 hidden md:flex items-center">
                     <Button asChild variant="ghost" className="cursor-pointer transition active:scale-95">
+                        <Link href="/">Shop</Link>
+                    </Button>
+                    <Button asChild variant="ghost" className="cursor-pointer transition active:scale-95">
                         <Link href="/about">About Us</Link>
                     </Button>
                     <Button asChild variant="ghost" className="cursor-pointer transition active:scale-95">
@@ -66,6 +69,9 @@ export const LandingNavBar = () => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-40">
+                            <DropdownMenuItem>
+                                <Link href="/" className="cursor-pointer transition active:scale-95">Shop</Link>
+                            </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Link href="/about" className="cursor-pointer transition active:scale-95">About us</Link>
                             </DropdownMenuItem>

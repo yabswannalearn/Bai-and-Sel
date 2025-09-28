@@ -8,7 +8,7 @@ import Footer from "@/components/layout/Footer"
 export default function AboutUs() {
     return (
         <div>
-            <Navbar />
+            <LandingNavBar />
 
             <motion.div
                 initial={{ opacity: 0 }}
@@ -53,7 +53,7 @@ export default function AboutUs() {
                     </div>
                 </div>
             </motion.div>
-            <Footer />
+    
         </div>
     )
 }

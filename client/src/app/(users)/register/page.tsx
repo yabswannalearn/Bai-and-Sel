@@ -73,7 +73,7 @@ export default function RegisterPage() {
         </Card>
       </div>
     </motion.div>
-    <Footer />
+  
     </div>
   )
 }
