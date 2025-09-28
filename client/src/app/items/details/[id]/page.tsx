@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import axios from "axios"
 import {
   Card,
@@ -35,6 +35,7 @@ type CurrentUser = {
 
 export default function ItemDetail() {
   const { id } = useParams()
+  const router = useRouter()
   const [item, setItem] = useState<Item | null>(null)
   const [currentUser, setCurrentUser] = useState<CurrentUser>(null)
   const [loading, setLoading] = useState(true)
@@ -49,18 +50,22 @@ export default function ItemDetail() {
           `${process.env.NEXT_PUBLIC_API_URL}/items/${id}`,
           { withCredentials: true }
         )
-
         setItem({
           ...res.data,
           id: Number(res.data.id),
           userId: Number(res.data.userId),
         })
-
-        const favRes = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/favorites/status/${id}`,
-          { withCredentials: true }
-        )
-        setIsFavorited(favRes.data.favorited)
+        try {
+          const favRes = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/favorites/status/${id}`,
+            { withCredentials: true }
+          )
+          setIsFavorited(favRes.data.favorited)
+        } catch (err: any) {
+          if (err.response?.status === 401) {
+            setIsFavorited(false)
+          }
+        }
       } catch (err: any) {
         setError(err.message)
       } finally {
@@ -73,10 +78,11 @@ export default function ItemDetail() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_AUTH_API}/me`, {
           withCredentials: true,
         })
 
+        console.log(res.data)
         if (res.data?.id) {
           setCurrentUser({
             ...res.data,
@@ -101,9 +107,13 @@ export default function ItemDetail() {
       )
       setIsFavorited(res.data.favorited)
     } catch (err: any) {
-      console.error("Favorite toggle failed:", err.message)
+      if (err.response?.status === 401) {
+        router.push("/login")
+      }
     }
   }
+
+  console.log(currentUser)
 
   if (loading) return <p className="p-4">Loading...</p>
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>
@@ -112,7 +122,6 @@ export default function ItemDetail() {
   return (
     <>
       <Navbar />
-
       <section className="p-6 mt-20">
         <Card className="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="flex justify-center items-start">
@@ -122,8 +131,8 @@ export default function ItemDetail() {
                   typeof item.image === "string"
                     ? `${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`
                     : item.image
-                    ? URL.createObjectURL(item.image)
-                    : undefined
+                      ? URL.createObjectURL(item.image)
+                      : undefined
                 }
                 alt={item.name}
                 className="w-full max-w-md object-contain rounded-md border"
@@ -134,18 +143,14 @@ export default function ItemDetail() {
               </div>
             )}
           </div>
-
           <div className="flex flex-col justify-between space-y-6">
             <CardHeader className="p-0 flex justify-between items-start">
               <div>
-                <CardTitle className="text-3xl font-bold">
-                  {item.name}
-                </CardTitle>
+                <CardTitle className="text-3xl font-bold">{item.name}</CardTitle>
                 <CardDescription className="text-base">
                   Posted by <b>{item.userName || "Unknown"}</b>
                 </CardDescription>
               </div>
-
               <Button
                 variant="ghost"
                 size="icon"
@@ -153,13 +158,11 @@ export default function ItemDetail() {
                 className="ml-4"
               >
                 <Heart
-                  className={`w-6 h-6 ${
-                    isFavorited ? "fill-red-500 text-red-500" : "text-gray-500"
-                  }`}
+                  className={`w-6 h-6 ${isFavorited ? "fill-red-500 text-red-500" : "text-gray-500"
+                    }`}
                 />
               </Button>
             </CardHeader>
-
             <CardContent className="p-0 space-y-4">
               <p className="text-lg">{item.description}</p>
               {item.category && (
@@ -175,31 +178,31 @@ export default function ItemDetail() {
                 <b>
                   {item.createdAt
                     ? new Date(item.createdAt).toLocaleString("en-US", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                        hour12: true,
-                      })
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                      hour12: true,
+                    })
                     : "Unknown"}
                 </b>
               </p>
-
               <div className="flex flex-col gap-4 mt-6">
                 <Button size="lg" className="w-full">
                   Contact Seller
                 </Button>
-
-                <EditItemModal
-                  item={item}
-                  onUpdated={(updated) =>
-                    setItem((prev) => ({
-                      ...(prev ?? ({} as Item)),
-                      ...updated,
-                    }))
-                  }
-                />
+                {currentUser?.id === item.userId && (
+                  <EditItemModal
+                    item={item}
+                    onUpdated={(updated) =>
+                      setItem((prev) => ({
+                        ...(prev ?? ({} as Item)),
+                        ...updated,
+                      }))
+                    }
+                  />
+                )}
               </div>
             </CardContent>
           </div>

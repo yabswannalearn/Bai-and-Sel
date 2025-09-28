@@ -24,7 +24,7 @@ export default function Navbar() {
     const checkAuth = async () => {
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_AUTH_API}/me`, // your auth check endpoint
+          `${process.env.NEXT_PUBLIC_AUTH_API}/me`,
           { withCredentials: true }
         )
         if (res.data) setIsLoggedIn(true)
@@ -68,12 +68,17 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="flex gap-x-4 hidden md:flex items-center">
-          <Button asChild variant="ghost" className="cursor-pointer transition active:scale-95">
-            <Link href="/items/favorites">Favorites</Link>
-          </Button>
+          {/* ✅ Show only if logged in */}
+          {isLoggedIn && (
+            <>
+              <Button asChild variant="ghost" className="cursor-pointer transition active:scale-95">
+                <Link href="/items/favorites">Favorites</Link>
+              </Button>
+              <AddItemModal />
+            </>
+          )}
 
-          <AddItemModal />
-
+          {/* Dark mode toggle */}
           <Button
             variant="ghost"
             className="flex items-center justify-center cursor-pointer transition active:scale-95"
@@ -117,16 +122,20 @@ export default function Navbar() {
                   Contact
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link href="/items/favorites" className="cursor-pointer transition active:scale-95">
-                  Favorites
-                </Link>
-              </DropdownMenuItem>
 
-              {/* ✅ Mobile Add Item modal */}
-              <DropdownMenuItem asChild>
-                <AddItemModal />
-              </DropdownMenuItem>
+              {/* ✅ Show only if logged in */}
+              {isLoggedIn && (
+                <>
+                  <DropdownMenuItem>
+                    <Link href="/items/favorites" className="cursor-pointer transition active:scale-95">
+                      Favorites
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <AddItemModal />
+                  </DropdownMenuItem>
+                </>
+              )}
 
               <DropdownMenuItem asChild>
                 <Button

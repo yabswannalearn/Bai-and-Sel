@@ -11,6 +11,7 @@ import { toast } from "sonner"
 import { Loader } from "lucide-react"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
+import ClientOnly from "@/components/common/ClientOnly"
 
 export default function ContactUs() {
   const [email, setEmail] = useState("")
@@ -35,7 +36,7 @@ export default function ContactUs() {
         toast("Message Sent 🎉", {
           description: "Thanks for reaching out. We’ll get back to you soon.",
         }
-      )
+        )
       }
     } catch (err: any) {
       setLoad(false)
@@ -48,48 +49,49 @@ export default function ContactUs() {
   return (
     <div className="transition-all duration-700">
       < LandingNavBar />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="flex w-full min-h-screen justify-center items-center p-4">
-          <Card className="w-full max-w-lg shadow-xl">
-            <CardHeader>
-              <CardTitle className="text-center text-2xl">Contact Us</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form className="flex flex-col gap-4" onSubmit={submitButton}>
-                <Input
-                  type="email"
-                  placeholder="Your Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                <Input
-                  type="text"
-                  placeholder="Your Subject"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  required
-                />
-                <Textarea
-                  placeholder="Your Message..."
-                  className="min-h-[120px]"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  required
-                />
-                <Button type="submit" className="cursor-pointer">
-                  {loading ? <Loader className="animate-spin"/>: "Send Message"}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </motion.div>
-
+      <ClientOnly>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex w-full min-h-screen justify-center items-center p-4">
+            <Card className="w-full max-w-lg shadow-xl">
+              <CardHeader>
+                <CardTitle className="text-center text-2xl">Contact Us</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form className="flex flex-col gap-4" onSubmit={submitButton}>
+                  <Input
+                    type="email"
+                    placeholder="Your Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Your Subject"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    required
+                  />
+                  <Textarea
+                    placeholder="Your Message..."
+                    className="min-h-[120px]"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    required
+                  />
+                  <Button type="submit" className="cursor-pointer">
+                    {loading ? <Loader className="animate-spin" /> : "Send Message"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </motion.div>
+      </ClientOnly>
     </div>
   )
 }
