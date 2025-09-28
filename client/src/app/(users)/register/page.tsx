@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { motion } from "framer-motion"
 import { LandingNavBar } from "@/components/layout/LandingNavBar"
 import Footer from "@/components/layout/Footer"
+import ClientOnly from "@/components/common/ClientOnly"
 
 axios.defaults.withCredentials = true
 
@@ -41,39 +42,40 @@ export default function RegisterPage() {
 
   return (
     <div className="transition-all duration-700">
-      <LandingNavBar/>
-      <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}>
-      <div className="flex justify-center items-center w-full min-h-screen">
-        <Card className="w-[90%] md:w-1/2 lg:w-1/4 p-4 flex justify-center items-center">
-          <h2>Register</h2>
-          <form onSubmit={handleRegister} className="flex flex-col gap-y-4 w-full">
+      <LandingNavBar />
+      <ClientOnly>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}>
+          <div className="flex justify-center items-center w-full min-h-screen">
+            <Card className="w-[90%] md:w-1/2 lg:w-1/4 p-4 flex justify-center items-center">
+              <h2>Register</h2>
+              <form onSubmit={handleRegister} className="flex flex-col gap-y-4 w-full">
 
-            <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-            <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+                <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
-            <Button type="submit" className="cursor-pointer">Register</Button>
-          </form>
+                <Button type="submit" className="cursor-pointer">Register</Button>
+              </form>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {success && <p style={{ color: "green" }}>{success}</p>}
+              {error && <p style={{ color: "red" }}>{error}</p>}
+              {success && <p style={{ color: "green" }}>{success}</p>}
 
 
-          <div className="flex items-center justify-center">
-            <p>
-              Already have an account?{" "}
-              <Link href="/login" className="underline text-blue-400">
-                Login
-              </Link>
-            </p>
+              <div className="flex items-center justify-center">
+                <p>
+                  Already have an account?{" "}
+                  <Link href="/login" className="underline text-blue-400">
+                    Login
+                  </Link>
+                </p>
+              </div>
+            </Card>
           </div>
-        </Card>
-      </div>
-    </motion.div>
-  
+        </motion.div>
+      </ClientOnly>
     </div>
   )
 }

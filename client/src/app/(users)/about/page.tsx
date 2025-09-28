@@ -4,12 +4,13 @@ import Navbar from "@/components/layout/Navbar"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Footer from "@/components/layout/Footer"
+import ClientOnly from "@/components/common/ClientOnly"
 
 export default function AboutUs() {
     return (
         <div>
             <LandingNavBar />
-
+        <ClientOnly>
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -53,7 +54,7 @@ export default function AboutUs() {
                     </div>
                 </div>
             </motion.div>
-    
+    </ClientOnly>
         </div>
     )
 }
