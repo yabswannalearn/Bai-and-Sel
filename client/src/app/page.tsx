@@ -25,13 +25,12 @@ export default function Page() {
   }, [])
 
   return (
-    <div>
+    <div className="min-h-screen">
       <Navbar />
       <div className="p-4">
         <h2 className="text-2xl font-bold mb-4">{message}</h2>
         <ItemList />
       </div>
-      <Footer />
     </div>
   )
 }

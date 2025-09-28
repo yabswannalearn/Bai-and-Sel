@@ -89,7 +89,7 @@ export default function LoginPage() {
           </Card>
         </div>
       </motion.div>
-      <Footer />
+
     </div>
   )
 }

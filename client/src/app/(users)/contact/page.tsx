@@ -47,7 +47,7 @@ export default function ContactUs() {
 
   return (
     <div className="transition-all duration-700">
-      < Navbar />
+      < LandingNavBar />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -89,7 +89,7 @@ export default function ContactUs() {
           </Card>
         </div>
       </motion.div>
-      <Footer />
+
     </div>
   )
 }
