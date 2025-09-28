@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { authMiddleware } from "../middleware/auth";
-import { register, login, logout, contactUs } from "../controller/authController"
+import { register, login, logout, contactUs, authChecker } from "../controller/authController"
 
 const router = Router();
 
@@ -15,6 +15,8 @@ router.get("/me", authMiddleware, (req: any, res) => {
   }
   res.json({ id: req.user.id, email: req.user.email, name: req.user.name });
 });
+
+router.get("/isLoggedIn", authChecker);
 
 
 export default router

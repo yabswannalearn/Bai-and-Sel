@@ -112,8 +112,37 @@ export const contactUs = async (req: Request, res: Response) => {
     );
 
     return res.status(200).json({ success: true, message: "Email sent!" });
-  } catch (err) {
-    console.error((err as Error).message);
+  } catch (err: any) {
+    
     return res.status(500).json({ error: "Something went wrong." });
+  }
+};
+
+export const authChecker = async (req: Request, res: Response) => {
+  try {
+    const token = req.cookies?.token;
+
+    if (!token) {
+      return res.status(200).json({ loggedIn: false, user: null });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      id: number;
+      email: string;
+    };
+
+    if (!decoded) {
+      return res.status(200).json({ loggedIn: false, user: null });
+    }
+
+    return res.status(200).json({
+      loggedIn: true,
+      user: {
+        id: decoded.id,
+        email: decoded.email,
+      },
+    });
+  } catch (err: any) {
+    return res.status(200).json({ loggedIn: false, user: null });
   }
 };
