@@ -8,6 +8,8 @@ import { hash } from "crypto"
 import { error } from "console"
 import { json } from "stream/consumers"
 import { sendEmail } from "../middleware/mailer"
+import validator from "validator"
+
 // import 
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret"
@@ -16,12 +18,17 @@ export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
 
-    // 1. Validate inputs
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Please input all fields." });
     }
 
-    // 2. Check if user already exists
+    if (!validator.isStrongPassword(password)) {
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters long, include uppercase, lowercase, number, and special character",
+      });
+    }
+
     const existingUser = await db
       .select()
       .from(users)
@@ -31,18 +38,14 @@ export const register = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Email already exists." });
     }
 
-    // 3. Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 4. Insert user
     await db.insert(users).values({
       name,
       email,
       password_hash: hashedPassword,
     });
 
-    // 5. Respond success
-    return res.status(201).json({ message: "User registered successfully" });
 
   } catch (err: any) {
     console.error("Register error:", err);
