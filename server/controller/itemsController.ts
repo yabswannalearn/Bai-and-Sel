@@ -2,7 +2,7 @@
 import express, { Request, Response } from "express"
 import { db } from "../db"
 import { items } from "../db/schema"
-import { eq, and, or, ilike} from "drizzle-orm"
+import { eq, and, or, ilike, sql, desc} from "drizzle-orm"
 import { AuthRequest } from "../middleware/auth"
 import { users } from "../db/schema"
 import { error } from "console"
@@ -197,3 +197,57 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: err.message })
   }
 }
+
+export const filterItems = async (req: Request, res: Response) => {
+  try {
+    const { search, category, minPrice, maxPrice } = req.query;
+
+    let conditions = [];
+
+    if (search) {
+      conditions.push(
+        or(
+          ilike(items.name, `%${search}%`),
+          ilike(items.description, `%${search}%`)
+        )
+      );
+    }
+
+    if (category) {
+      conditions.push(eq(items.category, category as string));
+    }
+
+    if (minPrice) {
+      conditions.push(sql`${items.price} >= ${Number(minPrice)}`);
+    }
+
+    if (maxPrice) {
+      conditions.push(sql`${items.price} <= ${Number(maxPrice)}`);
+    }
+
+    const query = db
+      .select({
+        id: items.id,
+        name: items.name,
+        description: items.description,
+        image: items.image,
+        userId: items.userId,
+        createdAt: items.createdAt,
+        userName: users.name,
+        userEmail: users.email,
+        category: items.category,
+        price: items.price,
+      })
+      .from(items)
+      .leftJoin(users, eq(items.userId, users.id))
+      .where(
+        conditions.length > 0 ? and(...conditions) : undefined
+      );
+
+    const results = await query;
+    res.json(results);
+  } catch (err: any) {
+    console.error("❌ Filter error:", err);
+    res.status(500).json({ error: err.message });
+  }
+};

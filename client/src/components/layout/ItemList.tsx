@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import axios from "axios"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
+import ItemFilter from "./Filter"
 
 type Item = {
   id: number
@@ -23,12 +24,14 @@ export default function ItemList() {
   const [search, setSearch] = useState("")
   const router = useRouter()
 
-  const fetchItems = async (searchTerm = "") => {
+  const fetchItems = async (params: Record<string, any> = {}) => {
     try {
       setLoading(true)
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items`, {
+      console.log("📡 Fetching items with params:", params) // 👈 debug log
+
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/filter`, {
         withCredentials: true,
-        params: searchTerm ? { search: searchTerm } : {},
+        params, // 👈 send filters/search as query params
       })
       setItems(res.data)
     } catch (err: any) {
@@ -38,13 +41,19 @@ export default function ItemList() {
     }
   }
 
+  // 🔍 auto-search with debounce
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
-      fetchItems(search)
+      if (search.trim()) {
+        fetchItems({ search })
+      } else {
+        fetchItems()
+      }
     }, 400)
     return () => clearTimeout(delayDebounce)
   }, [search])
 
+  // first load
   useEffect(() => {
     fetchItems()
   }, [])
@@ -55,6 +64,8 @@ export default function ItemList() {
   return (
     <section className="p-4 space-y-6 mt-20">
       <div className="flex justify-between items-center flex-wrap gap-2">
+        {/* Filter sends its values into fetchItems */}
+        <ItemFilter onFilter={(filters) => fetchItems(filters)} />
         <h2 className="text-2xl font-bold">Browse Items</h2>
         <Input
           placeholder="Search items..."
@@ -84,12 +95,14 @@ export default function ItemList() {
               )}
               <div className="mt-4 text-sm text-muted-foreground space-y-1">
                 <p className="font-bold text-base text-foreground">
-                  PHP{Number(item.price).toLocaleString()}
+                  PHP {Number(item.price).toLocaleString()}
                 </p>
                 <p className="font-semibold text-base text-foreground">
                   {item.name}
                 </p>
-                <p>Posted by: <b>{item.userName || "Unknown"}</b></p>
+                <p>
+                  Posted by: <b>{item.userName || "Unknown"}</b>
+                </p>
               </div>
             </CardContent>
           </Card>
