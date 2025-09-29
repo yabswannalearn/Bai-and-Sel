@@ -1,61 +1,86 @@
 "use client"
 
 import { useState } from "react"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
 type Props = {
   onFilter: (filters: Record<string, any>) => void
 }
 
 export default function ItemFilter({ onFilter }: Props) {
-  const [search, setSearch] = useState("")
+//   const [search, setSearch] = useState("")
   const [category, setCategory] = useState("")
   const [minPrice, setMinPrice] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
 
   const handleApply = () => {
-    const filters = {
-      ...(search && { search }),
+    onFilter({
+    //   ...(search && { search }),
       ...(category && { category }),
       ...(minPrice && { minPrice }),
       ...(maxPrice && { maxPrice }),
-    }
-    console.log("📦 Sending filters:", filters) // 👈 debug
-    onFilter(filters) // 👈 send to ItemList
+    })
   }
 
-  return (
-    <div className="space-y-2">
-      <input
-        type="text"
-        placeholder="Search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="border p-1"
-      />
-      <input
-        type="text"
-        placeholder="Category"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="border p-1"
-      />
-      <input
-        type="number"
-        placeholder="Min Price"
-        value={minPrice}
-        onChange={(e) => setMinPrice(e.target.value)}
-        className="border p-1"
-      />
-      <input
-        type="number"
-        placeholder="Max Price"
-        value={maxPrice}
-        onChange={(e) => setMaxPrice(e.target.value)}
-        className="border p-1"
-      />
-      <button onClick={handleApply} className="border px-2 py-1">
-        Apply Filters
-      </button>
-    </div>
-  )
+  const handleReset = () => {
+    // setSearch("")
+    setCategory("")
+    setMinPrice("")
+    setMaxPrice("")
+    onFilter({})
+  }
+
+return (
+  <Card className="w-64 p-4 h-fit sticky top-24">
+    <CardHeader>
+      <CardTitle className="text-lg">Filters</CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4 p-0">
+      <div className="space-y-2">
+        <Label htmlFor="category">Category</Label>
+        <Input
+          id="category"
+          placeholder="Category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <div className="space-y-2">
+          <Label htmlFor="minPrice">Min</Label>
+          <Input
+            id="minPrice"
+            type="number"
+            placeholder="0"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="maxPrice">Max</Label>
+          <Input
+            id="maxPrice"
+            type="number"
+            placeholder="10000"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2 pt-2">
+        <Button onClick={handleApply} className="w-full">
+          Apply
+        </Button>
+        <Button variant="outline" onClick={handleReset} className="w-full">
+          Reset
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
+)
 }

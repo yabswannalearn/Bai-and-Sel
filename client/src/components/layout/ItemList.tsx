@@ -29,10 +29,13 @@ export default function ItemList() {
       setLoading(true)
       console.log("📡 Fetching items with params:", params) // 👈 debug log
 
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/items/filter`, {
-        withCredentials: true,
-        params, // 👈 send filters/search as query params
-      })
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/items/filter`,
+        {
+          withCredentials: true,
+          params, // 👈 send filters/search as query params
+        }
+      )
       setItems(res.data)
     } catch (err: any) {
       setError(err.message)
@@ -62,51 +65,55 @@ export default function ItemList() {
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>
 
   return (
-    <section className="p-4 space-y-6 mt-20">
-      <div className="flex justify-between items-center flex-wrap gap-2">
-        {/* Filter sends its values into fetchItems */}
-        <ItemFilter onFilter={(filters) => fetchItems(filters)} />
-        <h2 className="text-2xl font-bold">Browse Items</h2>
-        <Input
-          placeholder="Search items..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm"
-        />
-      </div>
+    <section className="p-6 mt-20 flex gap-6">
+      {/* Left Sidebar Filter */}
+      <ItemFilter onFilter={(filters) => fetchItems(filters)} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-        {items.length === 0 && <p>No items found.</p>}
-        {items.map((item) => (
-          <Card
-            key={item.id}
-            className="overflow-hidden transition-transform duration-300 hover:scale-[1.03] cursor-pointer"
-            onClick={() => router.push(`/items/details/${item.id}`)}
-          >
-            <CardContent>
-              {item.image && (
-                <div className="w-full aspect-square overflow-hidden rounded-md">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
-                    alt={item.name}
-                    className="w-full h-full object-cover rounded-md"
-                  />
+      {/* Right Content */}
+      <div className="flex-1 space-y-6">
+        <div className="flex justify-between items-center flex-wrap gap-2">
+          <h2 className="text-2xl font-bold">Browse Items</h2>
+          <Input
+            placeholder="Search items..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="max-w-sm"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {items.length === 0 && <p>No items found.</p>}
+          {items.map((item) => (
+            <Card
+              key={item.id}
+              className="overflow-hidden transition-transform duration-300 hover:scale-[1.03] cursor-pointer"
+              onClick={() => router.push(`/items/details/${item.id}`)}
+            >
+              <CardContent>
+                {item.image && (
+                  <div className="w-full aspect-square overflow-hidden rounded-md">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
+                      alt={item.name}
+                      className="w-full h-full object-cover rounded-md"
+                    />
+                  </div>
+                )}
+                <div className="mt-4 text-sm text-muted-foreground space-y-1">
+                  <p className="font-bold text-base text-foreground">
+                    PHP {Number(item.price).toLocaleString()}
+                  </p>
+                  <p className="font-semibold text-base text-foreground">
+                    {item.name}
+                  </p>
+                  <p>
+                    Posted by: <b>{item.userName || "Unknown"}</b>
+                  </p>
                 </div>
-              )}
-              <div className="mt-4 text-sm text-muted-foreground space-y-1">
-                <p className="font-bold text-base text-foreground">
-                  PHP {Number(item.price).toLocaleString()}
-                </p>
-                <p className="font-semibold text-base text-foreground">
-                  {item.name}
-                </p>
-                <p>
-                  Posted by: <b>{item.userName || "Unknown"}</b>
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </section>
   )
