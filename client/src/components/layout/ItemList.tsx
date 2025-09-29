@@ -13,6 +13,7 @@ type Item = {
   image?: string
   userName?: string
   userEmail?: string
+  price: number
 }
 
 export default function ItemList() {
@@ -82,6 +83,9 @@ export default function ItemList() {
                 </div>
               )}
               <div className="mt-4 text-sm text-muted-foreground space-y-1">
+                <p className="font-bold text-base text-foreground">
+                  PHP{Number(item.price).toLocaleString()}
+                </p>
                 <p className="font-semibold text-base text-foreground">
                   {item.name}
                 </p>

@@ -25,6 +25,7 @@ type Item = {
   userName?: string
   userEmail?: string
   createdAt?: string
+  price: number
 }
 
 type CurrentUser = {
@@ -124,6 +125,7 @@ export default function ItemDetail() {
       <Navbar />
       <section className="p-6 mt-20">
         <Card className="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Left column - Image */}
           <div className="flex justify-center items-start">
             {item.image ? (
               <img
@@ -131,8 +133,8 @@ export default function ItemDetail() {
                   typeof item.image === "string"
                     ? `${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`
                     : item.image
-                      ? URL.createObjectURL(item.image)
-                      : undefined
+                    ? URL.createObjectURL(item.image)
+                    : undefined
                 }
                 alt={item.name}
                 className="w-full max-w-md object-contain rounded-md border"
@@ -143,11 +145,21 @@ export default function ItemDetail() {
               </div>
             )}
           </div>
+
+          {/* Right column - Details */}
           <div className="flex flex-col justify-between space-y-6">
             <CardHeader className="p-0 flex justify-between items-start">
               <div>
-                <CardTitle className="text-3xl font-bold">{item.name}</CardTitle>
-                <CardDescription className="text-base">
+                <CardTitle className="text-3xl font-bold">
+                  {item.name}
+                </CardTitle>
+
+                {/* ✅ Price */}
+                <p className="text-2xl font-semibold text-white-600 mt-2">
+                  PHP{Number(item.price).toLocaleString()}
+                </p>
+
+                <CardDescription className="text-base mt-1">
                   Posted by <b>{item.userName || "Unknown"}</b>
                 </CardDescription>
               </div>
@@ -158,11 +170,13 @@ export default function ItemDetail() {
                 className="ml-4"
               >
                 <Heart
-                  className={`w-6 h-6 ${isFavorited ? "fill-red-500 text-red-500" : "text-gray-500"
-                    }`}
+                  className={`w-6 h-6 ${
+                    isFavorited ? "fill-red-500 text-red-500" : "text-gray-500"
+                  }`}
                 />
               </Button>
             </CardHeader>
+
             <CardContent className="p-0 space-y-4">
               <p className="text-lg">{item.description}</p>
               {item.category && (
@@ -178,16 +192,18 @@ export default function ItemDetail() {
                 <b>
                   {item.createdAt
                     ? new Date(item.createdAt).toLocaleString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                      hour: "numeric",
-                      minute: "numeric",
-                      hour12: true,
-                    })
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      })
                     : "Unknown"}
                 </b>
               </p>
+
+              {/* Actions */}
               <div className="flex flex-col gap-4 mt-6">
                 <Button size="lg" className="w-full">
                   Contact Seller
