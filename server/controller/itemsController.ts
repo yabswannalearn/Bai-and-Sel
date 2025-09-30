@@ -30,7 +30,7 @@ export const getItems = async (req: Request, res: Response) => {
         userEmail: users.email,
         category: items.category,
         price: items.price,
-        location: items.location,
+        itemLocation: items.itemLocation
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))
@@ -66,7 +66,7 @@ export const getItemById = async (req: Request, res: Response) => {
         userEmail: users.email,
         category: items.category,
         price: items.price,
-        location: items.location
+        itemLocation: items.itemLocation
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))
@@ -86,7 +86,7 @@ export const getItemById = async (req: Request, res: Response) => {
 
 export const postItems = async (req: AuthRequest, res: Response) => {
   try {
-    const { name, description, category, price, location} = req.body;
+    const { name, description, category, price, itemLocation} = req.body;
 
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -103,7 +103,7 @@ export const postItems = async (req: AuthRequest, res: Response) => {
         userId: Number(req.user.id),
         image: imagePath,
         price,
-        location,
+        itemLocation,
       })
       .returning({
         id: items.id,
@@ -114,7 +114,7 @@ export const postItems = async (req: AuthRequest, res: Response) => {
         createdAt: items.createdAt,
         category: items.category,
         price: items.price,
-        location: items.location,
+        itemLocation: items.itemLocation,
       });
 
     return res.status(201).json({
@@ -154,31 +154,48 @@ export const deleteItems = async (req: AuthRequest, res: Response) => {
 
 export const updateItems = async (req: AuthRequest, res: Response) => {
   try {
-
     console.log("req.body:", req.body)
     console.log("req.file:", req.file)
 
     const { id } = req.params
-    const { name, description, category, price} = req.body
-    const image = req.file ? `/uploads/${req.file.filename}` : undefined
+    const { name, description, category, itemLocation } = req.body
+    const price = req.body.price ? Number(req.body.price) : null
 
-    if (!req.user) return res.status(401).json({ message: "Unauthorized" })
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" })
+    }
 
+    // 🔍 Get current item (so we can retain old image if needed)
+    const current = await db
+      .select()
+      .from(items)
+      .where(and(eq(items.id, Number(id)), eq(items.userId, Number(req.user.id))))
+      .limit(1)
+
+    if (current.length === 0) {
+      return res.status(404).json({ message: "Item not found" })
+    }
+
+    // ✅ If new image uploaded, use it; otherwise keep old one
+    const image = req.file
+      ? `/uploads/${req.file.filename}`
+      : current[0].image
+
+    // 📝 Update the fields (only if provided)
     const updated = await db
       .update(items)
       .set({
         ...(name && { name }),
         ...(description && { description }),
         ...(category && { category }),
-        ...(image && { image }),
-        ...(price && { price }),
-        ...(location && { location }),
+        ...(itemLocation && { itemLocation }),
+        ...(price !== null && { price }),
+        image,
       })
       .where(and(eq(items.id, Number(id)), eq(items.userId, Number(req.user.id))))
       .returning()
 
-    if (updated.length === 0) return res.status(404).json({ message: "Item not found" })
-
+    // ✅ Get refreshed item with user info
     const refreshed = await db
       .select({
         id: items.id,
@@ -186,7 +203,7 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
         description: items.description,
         category: items.category,
         price: items.price,
-        location: items.location,
+        itemLocation: items.itemLocation,
         image: items.image,
         userId: items.userId,
         createdAt: items.createdAt,
@@ -199,15 +216,15 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
       .limit(1)
 
     res.json({ message: "Item updated successfully", item: refreshed[0] })
-    
   } catch (err: any) {
+    console.error("❌ Error in updateItems:", err)
     res.status(500).json({ error: err.message })
   }
 }
 
 export const filterItems = async (req: Request, res: Response) => {
   try {
-    const { search, category, minPrice, maxPrice, location } = req.query;
+    const { search, category, minPrice, maxPrice, itemLocation } = req.query;
 
     let conditions = [];
 
@@ -232,8 +249,8 @@ export const filterItems = async (req: Request, res: Response) => {
       conditions.push(sql`${items.price} <= ${Number(maxPrice)}`);
     }
 
-    if (location) {
-      conditions.push(eq(items.location, location as string))
+    if (itemLocation) {
+      conditions.push(eq(items.itemLocation, itemLocation as string))
     }
 
     const query = db
@@ -248,7 +265,7 @@ export const filterItems = async (req: Request, res: Response) => {
         userEmail: users.email,
         category: items.category,
         price: items.price,
-        location: items.location
+        itemLocation: items.itemLocation
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))

@@ -92,6 +92,13 @@
       "when": 1759190617272,
       "tag": "0012_minor_mephisto",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1759195092143,
+      "tag": "0013_brief_exodus",
+      "breakpoints": true
     }
   ]
 }
