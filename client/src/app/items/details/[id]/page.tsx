@@ -26,6 +26,7 @@ type Item = {
   userEmail?: string
   createdAt?: string
   price: number
+  itemLocation: string
 }
 
 type CurrentUser = {
@@ -186,6 +187,9 @@ export default function ItemDetail() {
               )}
               <p>
                 Contact: <b>{item.userEmail || "Unknown"}</b>
+              </p>
+              <p>
+                Location: <b>{item.itemLocation || "Unknown"}</b>
               </p>
               <p className="text-sm text-muted-foreground">
                 Posted at:{" "}
