@@ -20,6 +20,7 @@ export const items = pgTable("items", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   category: varchar("category", { length: 256 }).notNull(),
   price: integer("price").notNull(),
+  location: varchar("location", { length: 256}).notNull()
 });
 
 export const favorites = pgTable("favorites", {

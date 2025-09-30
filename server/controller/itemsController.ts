@@ -29,7 +29,8 @@ export const getItems = async (req: Request, res: Response) => {
         userName: users.name,
         userEmail: users.email,
         category: items.category,
-        price: items.price
+        price: items.price,
+        location: items.location,
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))
@@ -64,7 +65,8 @@ export const getItemById = async (req: Request, res: Response) => {
         userName: users.name,
         userEmail: users.email,
         category: items.category,
-        price: items.price
+        price: items.price,
+        location: items.location
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))
@@ -84,7 +86,7 @@ export const getItemById = async (req: Request, res: Response) => {
 
 export const postItems = async (req: AuthRequest, res: Response) => {
   try {
-    const { name, description, category, price } = req.body;
+    const { name, description, category, price, location} = req.body;
 
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -101,6 +103,7 @@ export const postItems = async (req: AuthRequest, res: Response) => {
         userId: Number(req.user.id),
         image: imagePath,
         price,
+        location,
       })
       .returning({
         id: items.id,
@@ -110,6 +113,8 @@ export const postItems = async (req: AuthRequest, res: Response) => {
         userId: items.userId,
         createdAt: items.createdAt,
         category: items.category,
+        price: items.price,
+        location: items.location,
       });
 
     return res.status(201).json({
@@ -167,6 +172,7 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
         ...(category && { category }),
         ...(image && { image }),
         ...(price && { price }),
+        ...(location && { location }),
       })
       .where(and(eq(items.id, Number(id)), eq(items.userId, Number(req.user.id))))
       .returning()
@@ -180,6 +186,7 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
         description: items.description,
         category: items.category,
         price: items.price,
+        location: items.location,
         image: items.image,
         userId: items.userId,
         createdAt: items.createdAt,
@@ -200,7 +207,7 @@ export const updateItems = async (req: AuthRequest, res: Response) => {
 
 export const filterItems = async (req: Request, res: Response) => {
   try {
-    const { search, category, minPrice, maxPrice } = req.query;
+    const { search, category, minPrice, maxPrice, location } = req.query;
 
     let conditions = [];
 
@@ -225,6 +232,10 @@ export const filterItems = async (req: Request, res: Response) => {
       conditions.push(sql`${items.price} <= ${Number(maxPrice)}`);
     }
 
+    if (location) {
+      conditions.push(eq(items.location, location as string))
+    }
+
     const query = db
       .select({
         id: items.id,
@@ -237,6 +248,7 @@ export const filterItems = async (req: Request, res: Response) => {
         userEmail: users.email,
         category: items.category,
         price: items.price,
+        location: items.location
       })
       .from(items)
       .leftJoin(users, eq(items.userId, users.id))
