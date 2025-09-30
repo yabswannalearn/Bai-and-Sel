@@ -20,6 +20,8 @@ type Item = {
   description: string
   category?: string
   image?: string
+  itemLocation?: string
+  price: number
 }
 
 type EditItemModalProps = {
@@ -33,6 +35,8 @@ export default function EditItemModal({ item, onUpdated }: EditItemModalProps) {
   const [description, setDescription] = useState(item.description)
   const [category, setCategory] = useState(item.category || "")
   const [image, setImage] = useState<File | null>(null)
+  const [itemLocation, setLocation] = useState(item.itemLocation || "")
+  const [price, setPrice] = useState(item.price)
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
@@ -45,6 +49,8 @@ export default function EditItemModal({ item, onUpdated }: EditItemModalProps) {
       if (name) formData.append("name", name)
       if (description) formData.append("description", description)
       if (category) formData.append("category", category)
+      if (itemLocation) formData.append("itemLocation", itemLocation)
+      if (price) formData.append("price", price.toString())
       if (image) formData.append("image", image)
 
       const res = await axios.patch(
@@ -107,6 +113,21 @@ export default function EditItemModal({ item, onUpdated }: EditItemModalProps) {
             <Input
               value={category}
               onChange={(e) => setCategory(e.target.value)}
+            />
+          </div>
+          <div>
+            <Label>Price</Label>
+            <Input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+            />
+          </div>
+          <div>
+            <Label>Location</Label>
+            <Input
+              value={itemLocation}
+              onChange={(e) => setLocation(e.target.value)}
             />
           </div>
           <div>
