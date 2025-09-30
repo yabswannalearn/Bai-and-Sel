@@ -15,6 +15,7 @@ type Item = {
   userName?: string
   userEmail?: string
   price: number
+  location: string
 }
 
 export default function ItemList() {
@@ -109,6 +110,11 @@ export default function ItemList() {
                   <p>
                     Posted by: <b>{item.userName || "Unknown"}</b>
                   </p>
+                  {item.location && (
+                    <p>
+                      Location: <b>{item.location}</b>
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>

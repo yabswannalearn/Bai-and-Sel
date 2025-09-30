@@ -17,6 +17,7 @@ export default function AddItemModal() {
   const [category, setCategory] = useState("")
   const [image, setImage] = useState<File | null>(null);
   const [price, setPrice] = useState("")
+  const [location, setLocation] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +28,7 @@ export default function AddItemModal() {
       formData.append("description", description);
       formData.append("category", category);
       formData.append("price", price)
+      formData.append("location", location)
       if (image) formData.append("image", image);
 
       const res = await axios.post(
@@ -46,6 +48,7 @@ export default function AddItemModal() {
       setCategory("");
       setImage(null);
       setPrice("")
+      setLocation("")
     } catch (err: any) {
       console.error("❌ Error adding items", err);
     }
@@ -91,6 +94,14 @@ export default function AddItemModal() {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="Price"
+            required
+            className="w-full border p-2 rounded"
+          />
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="Location"
             required
             className="w-full border p-2 rounded"
           />
