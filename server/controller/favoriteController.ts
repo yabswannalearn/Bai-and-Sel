@@ -51,6 +51,8 @@ export const getFavorites = async (req: AuthRequest, res: Response) => {
         image: items.image,
         createdAt: items.createdAt,
         userName: users.name,
+        price: items.price,
+        itemLocation: items.itemLocation
       })
       .from(favorites)
       .leftJoin(items, eq(favorites.itemId, items.id))
