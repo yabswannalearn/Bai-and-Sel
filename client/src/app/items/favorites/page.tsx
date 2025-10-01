@@ -25,6 +25,8 @@ type FavoriteItem = {
   image?: string
   createdAt?: string
   userName?: string
+  price: number
+  itemLocation: string
 }
 
 type TokenPayload = {
@@ -43,10 +45,9 @@ export default function FavoritesPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_AUTH_API}/me`,
-          { withCredentials: true }
-        )
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_AUTH_API}/me`, {
+          withCredentials: true,
+        })
         if (res.data) {
           setIsAuth(true)
         }
@@ -57,7 +58,6 @@ export default function FavoritesPage() {
     }
     checkAuth()
   }, [router])
-
 
   useEffect(() => {
     if (!isAuth) return
@@ -125,7 +125,10 @@ export default function FavoritesPage() {
         <h1 className="text-3xl font-bold mb-6">My Favorites</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {favorites.map((item) => (
-            <Card key={item.id} className="hover:shadow-lg transition flex flex-col">
+            <Card
+              key={item.id}
+              className="hover:shadow-lg transition flex flex-col"
+            >
               <Link href={`/items/details/${item.id}`} className="flex-grow">
                 <div className="w-full h-48 bg-gray-100 flex items-center justify-center overflow-hidden rounded-t-md">
                   {item.image ? (
@@ -139,15 +142,29 @@ export default function FavoritesPage() {
                   )}
                 </div>
                 <CardHeader>
-                  <CardTitle className="text-lg truncate">{item.name}</CardTitle>
+                  <CardTitle className="text-lg truncate">
+                    {item.name}
+                  </CardTitle>
                   <CardDescription className="truncate">
-                    {item.userName ? `Posted by ${item.userName}` : "Unknown user"}
+                    {item.userName
+                      ? `Posted by ${item.userName}`
+                      : "Unknown user"}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <p className="font-bold text-base text-foreground">
+                    {item.price
+                      ? `₱${Number(item.price).toLocaleString()}`
+                      : "No price"}
+                  </p>
                   <p className="text-sm text-muted-foreground line-clamp-2">
                     {item.description}
                   </p>
+                  {item.itemLocation && (
+                    <p>
+                      Location: <b>{item.itemLocation || "Wala e"}</b>
+                    </p>
+                  )}
                 </CardContent>
               </Link>
               <div className="p-4">
