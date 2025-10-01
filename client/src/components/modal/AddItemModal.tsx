@@ -28,7 +28,7 @@ export default function AddItemModal() {
       formData.append("description", description);
       formData.append("category", category);
       formData.append("price", price)
-      formData.append("location", itemLocation)
+      formData.append("itemLocation", itemLocation)
       if (image) formData.append("image", image);
 
       const res = await axios.post(
