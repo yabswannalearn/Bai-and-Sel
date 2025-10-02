@@ -1,35 +1,35 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import axios from "axios"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import ItemFilter from "./Filter"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import ItemFilter from "./Filter";
 
 type Item = {
-  id: number
-  name: string
-  description: string
-  image?: string
-  userName?: string
-  userEmail?: string
-  price: number
-  itemLocation: string
-  category: string
-}
+  id: number;
+  name: string;
+  description: string;
+  image?: string;
+  userName?: string;
+  userEmail?: string;
+  price: number;
+  itemLocation: string;
+  category: string;
+};
 
 export default function ItemList() {
-  const [items, setItems] = useState<Item[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [search, setSearch] = useState("")
-  const router = useRouter()
+  const [items, setItems] = useState<Item[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const router = useRouter();
 
   const fetchItems = async (params: Record<string, any> = {}) => {
     try {
-      setLoading(true)
-      console.log("📡 Fetching items with params:", params) // 👈 debug log
+      setLoading(true);
+      console.log("📡 Fetching items with params:", params); // 👈 debug log
 
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/items/filter`,
@@ -37,34 +37,34 @@ export default function ItemList() {
           withCredentials: true,
           params, // 👈 send filters/search as query params
         }
-      )
-      setItems(res.data)
+      );
+      setItems(res.data);
     } catch (err: any) {
-      setError(err.message)
+      setError(err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // 🔍 auto-search with debounce
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (search.trim()) {
-        fetchItems({ search })
+        fetchItems({ search });
       } else {
-        fetchItems()
+        fetchItems();
       }
-    }, 400)
-    return () => clearTimeout(delayDebounce)
-  }, [search])
+    }, 400);
+    return () => clearTimeout(delayDebounce);
+  }, [search]);
 
   // first load
   useEffect(() => {
-    fetchItems()
-  }, [])
+    fetchItems();
+  }, []);
 
-  if (loading) return <p className="p-4">Loading items...</p>
-  if (error) return <p className="p-4 text-red-500">Error: {error}</p>
+  if (loading) return <p className="p-4">Loading items...</p>;
+  if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
 
   return (
     <section className="p-6 mt-20 flex gap-6">
@@ -72,15 +72,15 @@ export default function ItemList() {
       <ItemFilter onFilter={(filters) => fetchItems(filters)} />
 
       {/* Right Content */}
-      <div className="flex-1 space-y-6">
+      <div className="flex-1">
         <div className="flex justify-between items-center flex-wrap gap-2">
-          <h2 className="text-2xl font-bold">Browse Items</h2>
+          {/* <h2 className="text-2xl font-bold">Browse Items</h2>
           <Input
             placeholder="Search items..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-sm"
-          />
+          /> */}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -126,5 +126,5 @@ export default function ItemList() {
         </div>
       </div>
     </section>
-  )
+  );
 }

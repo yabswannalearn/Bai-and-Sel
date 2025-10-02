@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function ItemFilter({ onFilter }: Props) {
-  //   const [search, setSearch] = useState("")
+  const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -19,7 +19,7 @@ export default function ItemFilter({ onFilter }: Props) {
 
   const handleApply = () => {
     onFilter({
-      //   ...(search && { search }),
+      ...(search && { search }),
       ...(category && { category }),
       ...(minPrice && { minPrice }),
       ...(maxPrice && { maxPrice }),
@@ -28,7 +28,7 @@ export default function ItemFilter({ onFilter }: Props) {
   };
 
   const handleReset = () => {
-    // setSearch("")
+    setSearch("");
     setCategory("");
     setMinPrice("");
     setMaxPrice("");
@@ -43,6 +43,15 @@ export default function ItemFilter({ onFilter }: Props) {
       </CardHeader>
       <CardContent className="space-y-4 p-0">
         <div className="space-y-2">
+          <Label htmlFor="search">Search</Label>
+          <Input
+            id="search"
+            placeholder="Search Items"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
           <Label htmlFor="category">Category</Label>
           <Input
             id="category"
@@ -50,7 +59,7 @@ export default function ItemFilter({ onFilter }: Props) {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           />
-          </div>
+        </div>
         <div className="space-y-2">
           <Label htmlFor="itemLocation">Location</Label>
           <Input
