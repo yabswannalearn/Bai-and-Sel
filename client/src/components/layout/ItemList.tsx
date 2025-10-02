@@ -16,6 +16,7 @@ type Item = {
   userEmail?: string
   price: number
   itemLocation: string
+  category: string
 }
 
 export default function ItemList() {
@@ -106,6 +107,9 @@ export default function ItemList() {
                   </p>
                   <p className="font-semibold text-base text-foreground">
                     {item.name}
+                  </p>
+                  <p>
+                    Category: <strong>{item.category}</strong>
                   </p>
                   <p>
                     Posted by: <b>{item.userName || "Unknown"}</b>
