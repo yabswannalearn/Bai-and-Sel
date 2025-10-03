@@ -62,7 +62,7 @@ export default function Navbar() {
       <div className="flex justify-between w-full items-center">
         <Link href="/">
           <h1 className="font-bold text-xl cursor-pointer transition active:scale-95">
-            My App
+            BNS
           </h1>
         </Link>
 
