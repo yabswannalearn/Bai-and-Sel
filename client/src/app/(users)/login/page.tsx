@@ -11,6 +11,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { LandingNavBar } from "@/components/layout/LandingNavBar"
 import Footer from "@/components/layout/Footer"
 import ClientOnly from "@/components/common/ClientOnly"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 axios.defaults.withCredentials = true
 
@@ -27,6 +29,7 @@ export default function LoginPage() {
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_AUTH_API}/login`, form)
       router.push("/")
+      toast.success("Login Successful!")
     } catch (err: any) {
       setError(err.response?.data?.error || "Login Failed")
     }
