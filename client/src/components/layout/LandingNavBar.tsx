@@ -38,7 +38,7 @@ export const LandingNavBar = () => {
     return (
         <nav className="w-full flex fixed top-0 p-4 border-1">
             <div className="flex justify-between w-full">
-                <Link href="/login">
+                <Link href="/">
                     <h1 className="font-bold text-xl cursor-pointer transition active:scale-95">BNS</h1>
                 </Link>
 
