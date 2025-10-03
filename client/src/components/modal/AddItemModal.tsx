@@ -157,9 +157,6 @@ export default function AddItemModal() {
           </form>
         </DialogContent>
       </Dialog>
-
-      {/* ✅ Toast container */}
-      <ToastContainer />
     </>
   );
 }

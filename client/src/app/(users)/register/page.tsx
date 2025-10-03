@@ -105,8 +105,6 @@ export default function RegisterPage() {
               </div>
             </Card>
           </div>
-          {/* ✅ Toast Container */}
-          <ToastContainer />
         </motion.div>
       </ClientOnly>
     </div>

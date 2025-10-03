@@ -32,5 +32,7 @@ export default function Page() {
         <ItemList />
       </div>
     </div>
+    
   )
+  
 }

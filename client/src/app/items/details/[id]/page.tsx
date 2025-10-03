@@ -262,7 +262,6 @@ export default function ItemDetail() {
           </div>
         </Card>
       </section>
-      <ToastContainer />
     </>
   )
 }

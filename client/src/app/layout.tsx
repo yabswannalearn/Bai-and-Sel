@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner"
 import Footer from "@/components/layout/Footer";
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +33,16 @@ export default function RootLayout({
       >
         {children}
         
+            <ToastContainer 
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <Toaster
           richColors
           duration={4000}

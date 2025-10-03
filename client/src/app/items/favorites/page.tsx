@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
 import { jwtDecode } from "jwt-decode"
 import { Loader2 } from "lucide-react"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 import {
   Card,
@@ -85,6 +87,7 @@ export default function FavoritesPage() {
         { withCredentials: true }
       )
       setFavorites((prev) => prev.filter((item) => item.id !== itemId))
+      toast.success("Removed Favorites!")
     } catch (err: any) {
       console.error("❌ Remove favorite error:", err.message)
     }
