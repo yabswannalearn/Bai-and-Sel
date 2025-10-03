@@ -34,13 +34,11 @@ export default function RegisterPage() {
         password,
       })
 
-      // ✅ Show toast
       toast.success("Registered successfully! Redirecting...", {
         position: "top-right",
         autoClose: 1500,
       })
 
-      // Redirect after toast
       setTimeout(() => router.push("/login"), 1600)
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration Failed")
@@ -92,8 +90,6 @@ export default function RegisterPage() {
                   Register
                 </Button>
               </form>
-
-              {error && <p style={{ color: "red" }}>{error}</p>}
 
               <div className="flex items-center justify-center mt-2">
                 <p>
