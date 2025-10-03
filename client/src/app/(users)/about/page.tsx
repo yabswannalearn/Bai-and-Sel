@@ -16,7 +16,7 @@ export default function AboutUs() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 md:px-12 pt-24">
+          <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 md:px-12 pt-24 overflow-hidden">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center md:text-left">
               About Us
             </h1>
@@ -65,6 +65,7 @@ export default function AboutUs() {
                   </p>
 
                   {/* Members Section */}
+                  {/* Members Section - moved just below */}
                   <div className="flex flex-col items-center justify-center mt-6">
                     <h3 className="text-lg font-semibold mb-4">Our Members</h3>
                     <ul className="space-y-3 text-center">
@@ -73,7 +74,7 @@ export default function AboutUs() {
                           href="https://github.com/juicemark"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block px-4 py-2 rounded-lg bg-muted hover:bg-muted/70 text-primary font-medium transition"
+                          className="text-primary font-medium hover:text-primary/70 hover:underline transition-colors duration-300"
                         >
                           Josh Mark Escaño
                         </a>
@@ -83,7 +84,7 @@ export default function AboutUs() {
                           href="https://github.com/yabswannalearn"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block px-4 py-2 rounded-lg bg-muted hover:bg-muted/70 text-primary font-medium transition"
+                          className="text-primary font-medium hover:text-primary/70 hover:underline transition-colors duration-300"
                         >
                           Reinael Yabut
                         </a>
@@ -93,7 +94,7 @@ export default function AboutUs() {
                           href="https://github.com/nashmglq"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block px-4 py-2 rounded-lg bg-muted hover:bg-muted/70 text-primary font-medium transition"
+                          className="text-primary font-medium hover:text-primary/70 hover:underline transition-colors duration-300"
                         >
                           Steven Nash Maglaqui
                         </a>
