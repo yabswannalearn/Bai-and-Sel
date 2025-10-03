@@ -66,9 +66,9 @@ export default function AboutUs() {
 
                   {/* Members Section */}
                   {/* Members Section - moved just below */}
-                  <div className="flex flex-col items-center justify-center mt-6">
-                    <h3 className="text-lg font-semibold mb-4">Our Members</h3>
-                    <ul className="space-y-3 text-center">
+                  <div className="flex flex-col ">
+                    <h3 className="text-2xl font-bold mb-4">Our Members</h3>
+                    <ul className="space-y-3 -center">
                       <li>
                         <a
                           href="https://github.com/juicemark"
@@ -76,7 +76,7 @@ export default function AboutUs() {
                           rel="noopener noreferrer"
                           className="text-primary font-medium hover:text-primary/70 hover:underline transition-colors duration-300"
                         >
-                          Josh Mark Escaño
+                          <strong>Josh Mark Escaño</strong>
                         </a>
                       </li>
                       <li>
@@ -86,7 +86,7 @@ export default function AboutUs() {
                           rel="noopener noreferrer"
                           className="text-primary font-medium hover:text-primary/70 hover:underline transition-colors duration-300"
                         >
-                          Reinael Yabut
+                          <strong>Reinael Yabut</strong>
                         </a>
                       </li>
                       <li>
@@ -96,7 +96,7 @@ export default function AboutUs() {
                           rel="noopener noreferrer"
                           className="text-primary font-medium hover:text-primary/70 hover:underline transition-colors duration-300"
                         >
-                          Steven Nash Maglaqui
+                          <strong>Steven Nash Maglaqui</strong>
                         </a>
                       </li>
                     </ul>
