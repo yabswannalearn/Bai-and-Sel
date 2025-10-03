@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button"
 import { Heart } from "lucide-react"
 import Navbar from "@/components/layout/Navbar"
 import EditItemModal from "@/components/modal/EditItemModal"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 type Item = {
   id: number
@@ -107,6 +109,9 @@ export default function ItemDetail() {
         { withCredentials: true }
       )
       setIsFavorited(res.data.favorited)
+      toast.success(
+        res.data.favorited ? "Added to favorites!" : "Removed from favorites!"
+      )
     } catch (err: any) {
       if (err.response?.status === 401) {
         router.push("/login")
@@ -257,6 +262,7 @@ export default function ItemDetail() {
           </div>
         </Card>
       </section>
+      <ToastContainer />
     </>
   )
 }
