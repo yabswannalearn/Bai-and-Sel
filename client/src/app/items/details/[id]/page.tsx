@@ -114,16 +114,22 @@ export default function ItemDetail() {
     }
   }
 
-  const handleContactSeller = () => {
-    if (!item?.userEmail) return
-    const subject = `I am interested in ${item.name}`
+  const isOwner = Boolean(
+    currentUser && item && Number(currentUser.id) === Number(item.userId)
+  )
 
+  const isLoggedIn = Boolean(currentUser)
+
+  const handleContactSeller = () => {
+    if (isOwner) return
+    if (!item?.userEmail) return
+
+    const subject = `I am interested in ${item.name}`
     const gmailUrl = `https://mail.google.com/mail/u/0/?view=cm&fs=1&to=${encodeURIComponent(
       item.userEmail
     )}&su=${encodeURIComponent(subject)}`
 
     window.open(gmailUrl, "_blank")
-
     console.log("Contacting seller via Gmail:", item?.userEmail)
   }
 
@@ -217,15 +223,24 @@ export default function ItemDetail() {
                 </b>
               </p>
 
-              {/* Actions */}
               <div className="flex flex-col gap-4 mt-6">
-                <Button
-                  size="lg"
-                  className="w-full"
-                  onClick={handleContactSeller}
-                >
-                  Contact Seller
-                </Button>
+                {!isLoggedIn ? (
+                  <Button size="lg" className="w-full" disabled>
+                    Login to Contact Seller
+                  </Button>
+                ) : isOwner ? (
+                  <Button size="lg" className="w-full" disabled>
+                    You are the seller
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    className="w-full"
+                    onClick={handleContactSeller}
+                  >
+                    Contact Seller
+                  </Button>
+                )}
                 {currentUser?.id === item.userId && (
                   <EditItemModal
                     item={item}
