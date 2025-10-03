@@ -11,6 +11,8 @@ import { motion } from "framer-motion"
 import { LandingNavBar } from "@/components/layout/LandingNavBar"
 import Footer from "@/components/layout/Footer"
 import ClientOnly from "@/components/common/ClientOnly"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 axios.defaults.withCredentials = true
 
@@ -20,12 +22,10 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
-    setSuccess("")
 
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_AUTH_API}/register`, {
@@ -33,10 +33,20 @@ export default function RegisterPage() {
         email,
         password,
       })
-      setSuccess("✅ Registered successfully! Redirecting...")
-      setTimeout(() => router.push("/login"), 1500)
+
+      // ✅ Show toast
+      toast.success("Registered successfully! Redirecting...", {
+        position: "top-right",
+        autoClose: 1500,
+      })
+
+      // Redirect after toast
+      setTimeout(() => router.push("/login"), 1600)
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration Failed")
+      toast.error(err.response?.data?.message || "Registration Failed", {
+        position: "top-right",
+      })
     }
   }
 
@@ -47,24 +57,45 @@ export default function RegisterPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}>
+          transition={{ duration: 0.5 }}
+        >
           <div className="flex justify-center items-center w-full min-h-screen">
             <Card className="w-[90%] md:w-1/2 lg:w-1/4 p-4 flex justify-center items-center">
               <h2>Register</h2>
-              <form onSubmit={handleRegister} className="flex flex-col gap-y-4 w-full">
+              <form
+                onSubmit={handleRegister}
+                className="flex flex-col gap-y-4 w-full"
+              >
+                <Input
+                  type="text"
+                  placeholder="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
 
-                <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-                <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-
-                <Button type="submit" className="cursor-pointer">Register</Button>
+                <Button type="submit" className="cursor-pointer">
+                  Register
+                </Button>
               </form>
 
               {error && <p style={{ color: "red" }}>{error}</p>}
-              {success && <p style={{ color: "green" }}>{success}</p>}
 
-
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center mt-2">
                 <p>
                   Already have an account?{" "}
                   <Link href="/login" className="underline text-blue-400">
@@ -74,6 +105,8 @@ export default function RegisterPage() {
               </div>
             </Card>
           </div>
+          {/* ✅ Toast Container */}
+          <ToastContainer />
         </motion.div>
       </ClientOnly>
     </div>
