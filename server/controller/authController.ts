@@ -34,7 +34,7 @@ export const register = async (req: Request, res: Response) => {
       .from(users)
       .where(eq(users.email, email));
 
-    if (existingUser.length > 0) {
+    if (existingUser.length >= 1) {
       return res.status(400).json({ message: "Email already exists." });
     }
 
@@ -46,6 +46,7 @@ export const register = async (req: Request, res: Response) => {
       password_hash: hashedPassword,
     });
 
+    return res.status(200).json({success: true, message: "Registered!"})
 
   } catch (err: any) {
     console.error("Register error:", err);

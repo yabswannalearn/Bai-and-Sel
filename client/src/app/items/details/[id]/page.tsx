@@ -84,7 +84,6 @@ export default function ItemDetail() {
           withCredentials: true,
         })
 
-        console.log(res.data)
         if (res.data?.id) {
           setCurrentUser({
             ...res.data,
@@ -115,7 +114,18 @@ export default function ItemDetail() {
     }
   }
 
-  console.log(currentUser)
+  const handleContactSeller = () => {
+    if (!item?.userEmail) return
+    const subject = `I am interested in ${item.name}`
+
+    const gmailUrl = `https://mail.google.com/mail/u/0/?view=cm&fs=1&to=${encodeURIComponent(
+      item.userEmail
+    )}&su=${encodeURIComponent(subject)}`
+
+    window.open(gmailUrl, "_blank")
+
+    console.log("Contacting seller via Gmail:", item?.userEmail)
+  }
 
   if (loading) return <p className="p-4">Loading...</p>
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>
@@ -209,7 +219,11 @@ export default function ItemDetail() {
 
               {/* Actions */}
               <div className="flex flex-col gap-4 mt-6">
-                <Button size="lg" className="w-full">
+                <Button
+                  size="lg"
+                  className="w-full"
+                  onClick={handleContactSeller}
+                >
                   Contact Seller
                 </Button>
                 {currentUser?.id === item.userId && (
