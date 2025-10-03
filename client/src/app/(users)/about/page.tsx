@@ -53,10 +53,10 @@ export default function AboutUs() {
               <div className="w-full md:w-1/2 p-6 flex flex-col justify-between text-center md:text-left">
                 {/* Top Section - Our Journey */}
                 <div>
-                  <h2 className="text-2xl font-bold tracking-tight mb-3 font-serif">
+                  <h2 className="text-2xl font-bold tracking-tight mb-3">
                     Our Journey
                   </h2>
-                  <p className="text-muted-foreground leading-relaxed font-light text-base mb-5">
+                  <p className="text-muted-foreground leading-relaxed text-base mb-5">
                     As <span className="font-semibold">Incognare</span>, we
                     believe in learning by building. Every project we create
                     brings us closer to mastering technology and shaping our
@@ -64,16 +64,16 @@ export default function AboutUs() {
                     tech are what drive us forward.
                   </p>
 
-                  {/* Members Section - moved just below */}
-                  <div className="mt-5">
-                    <h3 className="text-lg font-semibold mb-2">Our Members</h3>
-                    <ul className="space-y-2">
+                  {/* Members Section */}
+                  <div className="flex flex-col items-center justify-center mt-6">
+                    <h3 className="text-lg font-semibold mb-4">Our Members</h3>
+                    <ul className="space-y-3 text-center">
                       <li>
                         <a
                           href="https://github.com/juicemark"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:underline"
+                          className="inline-block px-4 py-2 rounded-lg bg-muted hover:bg-muted/70 text-primary font-medium transition"
                         >
                           Josh Mark Escaño
                         </a>
@@ -83,7 +83,7 @@ export default function AboutUs() {
                           href="https://github.com/yabswannalearn"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:underline"
+                          className="inline-block px-4 py-2 rounded-lg bg-muted hover:bg-muted/70 text-primary font-medium transition"
                         >
                           Reinael Yabut
                         </a>
@@ -93,7 +93,7 @@ export default function AboutUs() {
                           href="https://github.com/nashmglq"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:underline"
+                          className="inline-block px-4 py-2 rounded-lg bg-muted hover:bg-muted/70 text-primary font-medium transition"
                         >
                           Steven Nash Maglaqui
                         </a>
