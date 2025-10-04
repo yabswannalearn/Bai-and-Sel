@@ -1,5 +1,6 @@
 .env
 server/node_modules
 server/uploads/*
+!server/uploads/.gitkeep
 server/.env
 client/.env
