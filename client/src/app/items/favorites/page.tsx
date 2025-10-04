@@ -116,7 +116,7 @@ export default function FavoritesPage() {
     return (
       <>
         <Navbar />
-        <p className="p-4">No favorites yet.</p>
+        <p className="p-4 mt-60 text-center">No favorites yet.</p>
       </>
     )
   }
