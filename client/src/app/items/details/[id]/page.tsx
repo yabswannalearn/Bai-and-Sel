@@ -138,6 +138,22 @@ export default function ItemDetail() {
     console.log("Contacting seller via Gmail:", item?.userEmail)
   }
 
+const handleDelete = async () => {
+  if (!item) return
+  if (!confirm("Are you sure you want to delete this item?")) return
+
+  try {
+    await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}/items/${item.id}`,
+      { withCredentials: true }
+    )
+    toast.success("Item deleted successfully!")
+    router.push("/") // redirect back to home or item list
+  } catch (err: any) {
+    toast.error(err.response?.data?.message || "Failed to delete item")
+  }
+}
+
   if (loading) return <p className="p-4">Loading...</p>
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>
   if (!item) return <p className="p-4">Item not found</p>
@@ -257,6 +273,17 @@ export default function ItemDetail() {
                     }
                   />
                 )}
+
+                {currentUser?.id === item.userId && (
+                <Button 
+                variant="destructive"
+                size="lg"
+                className="w-full"
+                onClick={handleDelete}>
+                  Delete Item
+                </Button>
+                )}
+
               </div>
             </CardContent>
           </div>
