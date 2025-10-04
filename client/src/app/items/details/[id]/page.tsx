@@ -16,6 +16,7 @@ import Navbar from "@/components/layout/Navbar"
 import EditItemModal from "@/components/modal/EditItemModal"
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import DeleteItemModal from "@/components/modal/DeleteItemModal"
 
 type Item = {
   id: number
@@ -138,21 +139,6 @@ export default function ItemDetail() {
     console.log("Contacting seller via Gmail:", item?.userEmail)
   }
 
-const handleDelete = async () => {
-  if (!item) return
-  if (!confirm("Are you sure you want to delete this item?")) return
-
-  try {
-    await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_URL}/items/${item.id}`,
-      { withCredentials: true }
-    )
-    toast.success("Item deleted successfully!")
-    router.push("/") // redirect back to home or item list
-  } catch (err: any) {
-    toast.error(err.response?.data?.message || "Failed to delete item")
-  }
-}
 
   if (loading) return <p className="p-4">Loading...</p>
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>
@@ -275,13 +261,7 @@ const handleDelete = async () => {
                 )}
 
                 {currentUser?.id === item.userId && (
-                <Button 
-                variant="destructive"
-                size="lg"
-                className="w-full"
-                onClick={handleDelete}>
-                  Delete Item
-                </Button>
+                <DeleteItemModal itemId={item.id} itemName={item.name} />
                 )}
 
               </div>
