@@ -6,6 +6,7 @@ import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import ItemFilter from "./Filter";
+import AddItemModal from "../modal/AddItemModal";
 
 type Item = {
   id: number;
@@ -45,6 +46,12 @@ export default function ItemList() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    const handler = () => fetchItems()
+    window.addEventListener("ItemsUpdated", handler)
+    return () => window.removeEventListener("ItemsUpdated", handler)
+  })
+
 
   // 🔍 auto-search with debounce
   useEffect(() => {
@@ -68,10 +75,8 @@ export default function ItemList() {
 
   return (
     <section className="p-6 mt-20 flex gap-6">
-      {/* Left Sidebar Filter */}
       <ItemFilter onFilter={(filters) => fetchItems(filters)} />
 
-      {/* Right Content */}
       <div className="flex-1">
         <div className="flex justify-between items-center flex-wrap gap-2">
           {/* <h2 className="text-2xl font-bold">Browse Items</h2>

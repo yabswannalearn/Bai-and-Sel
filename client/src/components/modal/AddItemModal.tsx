@@ -50,6 +50,8 @@ export default function AddItemModal() {
         autoClose: 2000,
       });
 
+      window.dispatchEvent(new Event("ItemsUpdated"))
+
       // reset form
       setName("");
       setDescription("");

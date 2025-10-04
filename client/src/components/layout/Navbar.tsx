@@ -19,6 +19,7 @@ export default function Navbar() {
   const [showModal, setShowModal] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
+
   // ✅ Check login state
   useEffect(() => {
     const checkAuth = async () => {
