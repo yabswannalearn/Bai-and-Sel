@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import ItemFilter from "./Filter";
 import AddItemModal from "../modal/AddItemModal";
+import { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_UPLOAD_URL } from "@/constants/paths";
 
 type Item = {
   id: number;
@@ -32,13 +33,10 @@ export default function ItemList() {
       setLoading(true);
       console.log("📡 Fetching items with params:", params); // 👈 debug log
 
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/items/filter`,
-        {
-          withCredentials: true,
-          params, // 👈 send filters/search as query params
-        }
-      );
+      const res = await axios.get(`${NEXT_PUBLIC_API_URL}/items/filter`, {
+        withCredentials: true,
+        params,
+      });
       setItems(res.data);
     } catch (err: any) {
       setError(err.message);
@@ -47,11 +45,10 @@ export default function ItemList() {
     }
   };
   useEffect(() => {
-    const handler = () => fetchItems()
-    window.addEventListener("ItemsUpdated", handler)
-    return () => window.removeEventListener("ItemsUpdated", handler)
-  })
-
+    const handler = () => fetchItems();
+    window.addEventListener("ItemsUpdated", handler);
+    return () => window.removeEventListener("ItemsUpdated", handler);
+  });
 
   // 🔍 auto-search with debounce
   useEffect(() => {
@@ -100,7 +97,7 @@ export default function ItemList() {
                 {item.image && (
                   <div className="w-full aspect-square overflow-hidden rounded-md">
                     <img
-                      src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
+                      src={`${NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
                       alt={item.name}
                       className="w-full h-full object-cover rounded-md"
                     />

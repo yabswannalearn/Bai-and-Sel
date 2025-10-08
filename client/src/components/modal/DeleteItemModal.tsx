@@ -13,6 +13,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { NEXT_PUBLIC_API_URL } from "@/constants/paths"
+
 
 type DeleteItemModalProps = {
   itemId: number
@@ -27,7 +29,7 @@ export default function DeleteItemModal({ itemId, itemName }: DeleteItemModalPro
   const handleDelete = async () => {
     try {
       setLoading(true)
-      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/items/${itemId}`, {
+      await axios.delete(`${NEXT_PUBLIC_API_URL}/items/${itemId}`, {
         withCredentials: true,
       })
       toast.success("Item deleted successfully!")

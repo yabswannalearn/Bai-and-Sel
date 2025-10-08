@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import { NEXT_PUBLIC_API_URL } from "@/constants/paths"
 
 export default function AddItemModal() {
   const [open, setOpen] = useState(false) // control modal state
@@ -35,7 +36,7 @@ export default function AddItemModal() {
       if (image) formData.append("image", image)
 
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/items`,
+        `${NEXT_PUBLIC_API_URL}/items`,
         formData,
         {
           withCredentials: true,

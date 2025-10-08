@@ -10,6 +10,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { NEXT_PUBLIC_AUTH_API } from "@/constants/paths"
 
 export default function LogoutModal({ onClose }: { onClose: () => void }) {
   const router = useRouter()
@@ -17,7 +18,7 @@ export default function LogoutModal({ onClose }: { onClose: () => void }) {
   const handleLogout = async () => {
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_AUTH_API}/logout`,
+        `${NEXT_PUBLIC_AUTH_API}/logout`,
         {},
         { withCredentials: true }
       )

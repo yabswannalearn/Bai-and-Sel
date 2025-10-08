@@ -9,6 +9,7 @@ import { jwtDecode } from "jwt-decode"
 import { Loader2 } from "lucide-react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_AUTH_API, NEXT_PUBLIC_UPLOAD_URL } from "@/constants/paths"
 
 import {
   Card,
@@ -47,7 +48,7 @@ export default function FavoritesPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_AUTH_API}/me`, {
+        const res = await axios.get(`${NEXT_PUBLIC_AUTH_API}/me`, {
           withCredentials: true,
         })
         if (res.data) {
@@ -66,7 +67,7 @@ export default function FavoritesPage() {
     const fetchFavorites = async () => {
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/favorites`,
+          `${NEXT_PUBLIC_API_URL}/favorites`,
           { withCredentials: true }
         )
         setFavorites(res.data)
@@ -82,7 +83,7 @@ export default function FavoritesPage() {
   const removeFavorite = async (itemId: number) => {
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/favorites/toggle`,
+        `${NEXT_PUBLIC_API_URL}/favorites/toggle`,
         { itemId },
         { withCredentials: true }
       )
@@ -136,7 +137,7 @@ export default function FavoritesPage() {
                 <div className="w-full h-48 bg-gray-100 flex items-center justify-center overflow-hidden rounded-t-md">
                   {item.image ? (
                     <img
-                      src={`${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
+                      src={`${NEXT_PUBLIC_UPLOAD_URL}${item.image}`}
                       alt={item.name}
                       className="w-full h-full object-cover"
                     />

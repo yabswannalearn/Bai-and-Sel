@@ -12,6 +12,7 @@ import { Loader } from "lucide-react"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
 import ClientOnly from "@/components/common/ClientOnly"
+import { NEXT_PUBLIC_AUTH_API } from "@/constants/paths"
 
 export default function ContactUs() {
   const [email, setEmail] = useState("")
@@ -25,7 +26,7 @@ export default function ContactUs() {
       setLoad(true)
       const formData = { email, subject, text }
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_AUTH_API}/contact`,
+        `${NEXT_PUBLIC_AUTH_API}/contact`,
         formData
       )
       if (response.data && response.data.success) {
