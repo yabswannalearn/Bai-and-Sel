@@ -11,7 +11,10 @@ const app = express();
 const PORT = 3001;
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000", credentials: true}));
+app.use(cors({
+  origin: ["http://localhost:3000", "http://client:3000"],
+  credentials: true,
+}));
 app.use(express.json());
 app.use(cookieParser())
 
