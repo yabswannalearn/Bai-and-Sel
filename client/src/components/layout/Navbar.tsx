@@ -12,6 +12,7 @@ import {
 import LogoutModal from "../modal/LogoutModal"
 import AddItemModal from "../modal/AddItemModal"
 import axios from "axios"
+import { NEXT_PUBLIC_AUTH_API } from "@/constants/paths"
 
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false)
@@ -25,7 +26,7 @@ export default function Navbar() {
     const checkAuth = async () => {
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_AUTH_API}/me`,
+          `${NEXT_PUBLIC_AUTH_API}/me`,
           { withCredentials: true }
         )
         if (res.data) setIsLoggedIn(true)

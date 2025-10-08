@@ -5,6 +5,8 @@ import axios from "axios"
 import Navbar from "@/components/layout/Navbar"
 import ItemList from "@/components/layout/ItemList"
 import Footer from "@/components/layout/Footer"
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 
 axios.defaults.withCredentials = true
 
@@ -14,7 +16,7 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:3001")
+        const res = await axios.get(`${BASE_URL}`)
         setMessage(res.data.message)
       } catch (err) {
         console.error("Error fetching data:", err)

@@ -13,6 +13,7 @@ import Footer from "@/components/layout/Footer"
 import ClientOnly from "@/components/common/ClientOnly"
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import { NEXT_PUBLIC_AUTH_API } from "@/constants/paths"
 
 axios.defaults.withCredentials = true
 
@@ -28,7 +29,7 @@ export default function RegisterPage() {
     setError("")
 
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_AUTH_API}/register`, {
+      await axios.post(`${NEXT_PUBLIC_AUTH_API}/register`, {
         name,
         email,
         password,

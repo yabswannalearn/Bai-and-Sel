@@ -13,6 +13,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { NEXT_PUBLIC_API_URL } from "@/constants/paths"
+
 
 type Item = {
   id: number
@@ -54,7 +56,7 @@ export default function EditItemModal({ item, onUpdated }: EditItemModalProps) {
       if (image) formData.append("image", image)
 
       const res = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/items/${item.id}`,
+        `${NEXT_PUBLIC_API_URL}/items/${item.id}`,
         formData,
         {
           withCredentials: true, // let Axios handle Content-Type automatically

@@ -12,6 +12,9 @@ services:
       - /app/node_modules
     depends_on:
       - server
+    environment:
+      - NODE_ENV=production
+
 
   server:
     build:

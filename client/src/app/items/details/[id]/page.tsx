@@ -17,6 +17,7 @@ import EditItemModal from "@/components/modal/EditItemModal"
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import DeleteItemModal from "@/components/modal/DeleteItemModal"
+import { NEXT_PUBLIC_AUTH_API, NEXT_PUBLIC_API_URL, NEXT_PUBLIC_UPLOAD_URL } from "@/constants/paths"
 
 type Item = {
   id: number
@@ -52,7 +53,7 @@ export default function ItemDetail() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/items/${id}`,
+          `${NEXT_PUBLIC_API_URL}/items/${id}`,
           { withCredentials: true }
         )
         setItem({
@@ -62,7 +63,7 @@ export default function ItemDetail() {
         })
         try {
           const favRes = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/favorites/status/${id}`,
+            `${NEXT_PUBLIC_API_URL}/favorites/status/${id}`,
             { withCredentials: true }
           )
           setIsFavorited(favRes.data.favorited)
@@ -83,7 +84,7 @@ export default function ItemDetail() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_AUTH_API}/me`, {
+        const res = await axios.get(`${NEXT_PUBLIC_AUTH_API}/me`, {
           withCredentials: true,
         })
 
@@ -105,7 +106,7 @@ export default function ItemDetail() {
   const toggleFavorite = async () => {
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/favorites/toggle`,
+        `${NEXT_PUBLIC_API_URL}/favorites/toggle`,
         { itemId: id },
         { withCredentials: true }
       )
@@ -155,7 +156,7 @@ export default function ItemDetail() {
               <img
                 src={
                   typeof item.image === "string"
-                    ? `${process.env.NEXT_PUBLIC_UPLOAD_URL}${item.image}`
+                    ? `${NEXT_PUBLIC_UPLOAD_URL}${item.image}`
                     : item.image
                     ? URL.createObjectURL(item.image)
                     : undefined

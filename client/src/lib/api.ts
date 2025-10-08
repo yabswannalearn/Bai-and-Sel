@@ -1,7 +1,8 @@
 import axios from "axios";
+import { NEXT_PUBLIC_API_URL } from "@/constants/paths";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: NEXT_PUBLIC_API_URL,
   withCredentials: true, // ✅ send and receive cookies
 });
 
