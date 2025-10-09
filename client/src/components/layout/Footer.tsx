@@ -10,9 +10,9 @@ export default function Footer() {
           <Link href="/about" className="hover:underline">
             About Us
           </Link>
-          <Link href="/contact" className="hover:underline">
+          {/* <Link href="/contact" className="hover:underline">
             Contact
-          </Link>
+          </Link> */}
         </div>
         <div className="absolute right-4 text-xs">
           <p className="text-xs text-muted-foreground">

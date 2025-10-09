@@ -3,7 +3,7 @@ const isDocker = process.env.NODE_ENV === "production";
 
 const BASE_URL = isDocker
   ? "http://server:3001" // 👈 inside Docker network
-  : process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001"; // 👈 local dev
+  : "http://localhost:3001"; // 👈 local dev
 
 export const NEXT_PUBLIC_API_URL = `${BASE_URL}/api`;
 export const NEXT_PUBLIC_AUTH_API = `${BASE_URL}/auth`;
